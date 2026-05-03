@@ -1,461 +1,150 @@
 <!DOCTYPE html>
-<html lang="ca">
+<html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🔥 TrigMaster — Aprende Trigonometria Jugando</title>
+<title>TrigMaster BR - Aprenda Trigonometria Jogando</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
-<script>
-tailwind.config = {
-  theme: {
-    extend: {
-      fontFamily: {
-        sans: ['Nunito', 'sans-serif'],
-        game: ['Fredoka', 'sans-serif'],
-      },
-      colors: {
-        game: {
-          primary: '#58CC02',
-          secondary: '#CE82FF',
-          accent: '#FF9600',
-          danger: '#FF4B4B',
-          blue: '#1CB0F6',
-          pink: '#FF7EB5',
-          yellow: '#FFC800',
-          dark: '#3C3C3C',
-          light: '#F7F7F7',
-        }
-      },
-      animation: {
-        'bounce-slow': 'bounce 2s infinite',
-        'pulse-fast': 'pulse 1s infinite',
-        'shake': 'shake 0.5s ease-in-out',
-        'pop': 'pop 0.3s ease-out',
-        'slide-up': 'slideUp 0.4s ease-out',
-        'float': 'float 3s ease-in-out infinite',
-        'wiggle': 'wiggle 1s ease-in-out infinite',
-        'confetti': 'confetti 1s ease-out forwards',
-      },
-      keyframes: {
-        shake: {
-          '0%, 100%': { transform: 'translateX(0)' },
-          '25%': { transform: 'translateX(-10px)' },
-          '75%': { transform: 'translateX(10px)' },
-        },
-        pop: {
-          '0%': { transform: 'scale(0.8)', opacity: '0' },
-          '100%': { transform: 'scale(1)', opacity: '1' },
-        },
-        slideUp: {
-          '0%': { transform: 'translateY(20px)', opacity: '0' },
-          '100%': { transform: 'translateY(0)', opacity: '1' },
-        },
-        float: {
-          '0%, 100%': { transform: 'translateY(0)' },
-          '50%': { transform: 'translateY(-15px)' },
-        },
-        wiggle: {
-          '0%, 100%': { transform: 'rotate(-3deg)' },
-          '50%': { transform: 'rotate(3deg)' },
-        },
-        confetti: {
-          '0%': { transform: 'translateY(0) rotate(0deg)', opacity: '1' },
-          '100%': { transform: 'translateY(-100px) rotate(720deg)', opacity: '0' },
-        }
-      }
-    }
-  }
-}
-</script>
 <style>
-html { scroll-behavior: smooth; }
-body { font-family: 'Nunito', sans-serif; background: #F7F7F7; }
-.game-font { font-family: 'Fredoka', sans-serif; }
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Nunito',sans-serif;background:#F7F7F7}
+.game-font{font-family:'Fredoka',sans-serif}
 
-/* XP Bar Animation */
-.xp-bar-fill {
-  transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
+/* EXPAND */
+.expand-content{max-height:0;overflow:hidden;transition:max-height 0.5s ease}
+.expand-content.open{max-height:4000px}
 
-/* Card Flip Effect */
-.flip-card {
-  perspective: 1000px;
-}
-.flip-card-inner {
-  transition: transform 0.6s;
-  transform-style: preserve-3d;
-}
-.flip-card.flipped .flip-card-inner {
-  transform: rotateY(180deg);
-}
-.flip-card-front, .flip-card-back {
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
-.flip-card-back {
-  transform: rotateY(180deg);
-}
+/* FLIP CARD */
+.flip-card{perspective:1000px;cursor:pointer;height:200px}
+.flip-inner{position:relative;width:100%;height:100%;transition:transform 0.6s;transform-style:preserve-3d}
+.flip-card.flipped .flip-inner{transform:rotateY(180deg)}
+.flip-front,.flip-back{position:absolute;width:100%;height:100%;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+.flip-back{transform:rotateY(180deg)}
 
-/* Mascot Animation */
-.mascot {
-  animation: mascotIdle 2s ease-in-out infinite;
-}
-@keyframes mascotIdle {
-  0%, 100% { transform: translateY(0) scale(1); }
-  50% { transform: translateY(-10px) scale(1.02); }
-}
-.mascot.happy {
-  animation: mascotHappy 0.5s ease-out;
-}
-@keyframes mascotHappy {
-  0% { transform: scale(1) rotate(0deg); }
-  50% { transform: scale(1.2) rotate(-10deg); }
-  100% { transform: scale(1) rotate(0deg); }
-}
-.mascot.sad {
-  animation: mascotSad 0.5s ease-out;
-}
-@keyframes mascotSad {
-  0% { transform: translateY(0); }
-  50% { transform: translateY(20px) rotate(5deg); }
-  100% { transform: translateY(0); }
-}
+/* MASCOTE */
+.mascote{animation:mascoteIdle 2.5s ease-in-out infinite}
+@keyframes mascoteIdle{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
 
-/* Particle Effects */
-.particle {
-  position: absolute;
-  pointer-events: none;
-  animation: particleFloat 1s ease-out forwards;
-}
-@keyframes particleFloat {
-  0% { transform: translate(0, 0) scale(1); opacity: 1; }
-  100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
-}
+/* PARTICLES */
+.particle{position:fixed;pointer-events:none;z-index:9999;border-radius:50%;animation:particleAnim 1s ease-out forwards}
+@keyframes particleAnim{0%{transform:translate(0,0) scale(1);opacity:1}100%{transform:translate(var(--tx),var(--ty)) scale(0);opacity:0}}
 
-/* Streak Fire */
-.streak-fire {
-  animation: fireFlicker 0.5s ease-in-out infinite alternate;
-}
-@keyframes fireFlicker {
-  0% { transform: scale(1); filter: brightness(1); }
-  100% { transform: scale(1.1); filter: brightness(1.3); }
-}
+/* FLOAT EMOJI */
+.float-emoji{position:fixed;pointer-events:none;z-index:9999;animation:floatEmojiAnim 1.5s ease-out forwards;font-size:2rem}
+@keyframes floatEmojiAnim{0%{transform:translateY(0) scale(0.5);opacity:1}100%{transform:translateY(-100px) scale(1.5);opacity:0}}
 
-/* Progress Ring */
-.progress-ring-circle {
-  transition: stroke-dashoffset 0.5s ease-out;
-  transform: rotate(-90deg);
-  transform-origin: 50% 50%;
-}
+/* CONFETE */
+.confete{position:fixed;width:10px;height:10px;z-index:9999;animation:confeteAnim 3s ease-out forwards}
+@keyframes confeteAnim{0%{transform:translateY(-100vh) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
 
-/* Glow Effects */
-.glow-green { box-shadow: 0 0 20px rgba(88, 204, 2, 0.4); }
-.glow-red { box-shadow: 0 0 20px rgba(255, 75, 75, 0.4); }
-.glow-purple { box-shadow: 0 0 20px rgba(206, 130, 255, 0.4); }
+/* QUIZ OPTIONS */
+.quiz-opt{transition:all 0.15s ease;border:3px solid #E5E5E5;background:white}
+.quiz-opt:hover{transform:translateX(8px);border-color:#1CB0F6;box-shadow:0 4px 15px rgba(28,176,246,0.2)}
+.quiz-opt.certa{border-color:#58CC02 !important;background:rgba(88,204,2,0.15) !important}
+.quiz-opt.errada{border-color:#FF4B4B !important;background:rgba(255,75,75,0.15) !important;animation:shakeOpt 0.5s ease-in-out}
+@keyframes shakeOpt{0%,100%{transform:translateX(0)}20%{transform:translateX(-12px)}40%{transform:translateX(12px)}60%{transform:translateX(-8px)}80%{transform:translateX(8px)}}
 
-/* Button Press Effect */
-.btn-press:active {
-  transform: scale(0.95);
-}
+/* STREAK */
+.streak-bar{transition:all 0.3s ease}
+.streak-bar.active{background:linear-gradient(135deg,#FFC800,#FF9600);transform:scale(1.05);box-shadow:0 0 15px rgba(255,200,0,0.4)}
 
-/* Floating Hearts/Stars */
-.float-emoji {
-  position: absolute;
-  animation: floatEmoji 2s ease-out forwards;
-  pointer-events: none;
-}
-@keyframes floatEmoji {
-  0% { transform: translateY(0) scale(0.5); opacity: 1; }
-  100% { transform: translateY(-80px) scale(1.2); opacity: 0; }
-}
+/* HEART */
+.heart-beat{animation:heartBeat 1s ease-in-out infinite}
+@keyframes heartBeat{0%,100%{transform:scale(1)}15%{transform:scale(1.3)}30%{transform:scale(1)}45%{transform:scale(1.15)}60%{transform:scale(1)}}
 
-/* Shake on wrong */
-.shake-wrong {
-  animation: shakeWrong 0.5s ease-in-out;
-}
-@keyframes shakeWrong {
-  0%, 100% { transform: translateX(0); }
-  20% { transform: translateX(-15px); }
-  40% { transform: translateX(15px); }
-  60% { transform: translateX(-10px); }
-  80% { transform: translateX(10px); }
-}
+/* XP BAR */
+.xp-fill{transition:width 0.6s cubic-bezier(0.34,1.56,0.64,1)}
 
-/* Level up animation */
-.level-up {
-  animation: levelUp 1s ease-out;
-}
-@keyframes levelUp {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.3) rotate(5deg); }
-  100% { transform: scale(1); }
-}
+/* BTN PRESS */
+.btn-press:active{transform:scale(0.95)}
 
-/* Hide scrollbar but keep functionality */
-.no-scrollbar::-webkit-scrollbar { display: none; }
-.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+/* FLOAT ANIM */
+.float-anim{animation:floatAnim 3s ease-in-out infinite}
+@keyframes floatAnim{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
 
-/* Custom checkbox for quiz */
-.quiz-option {
-  transition: all 0.2s ease;
-}
-.quiz-option:hover {
-  transform: translateX(5px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-.quiz-option.selected {
-  border-color: #58CC02;
-  background: rgba(88, 204, 2, 0.1);
-}
-.quiz-option.correct {
-  border-color: #58CC02;
-  background: rgba(88, 204, 2, 0.2);
-  animation: correctPulse 0.5s ease-out;
-}
-.quiz-option.wrong {
-  border-color: #FF4B4B;
-  background: rgba(255, 75, 75, 0.2);
-  animation: shakeWrong 0.5s ease-in-out;
-}
-@keyframes correctPulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
-}
-
-/* Typing effect for mascot speech */
-.typing-text::after {
-  content: '|';
-  animation: blink 1s infinite;
-}
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-
-/* Rainbow border for achievements */
-.rainbow-border {
-  background: linear-gradient(90deg, #FF4B4B, #FF9600, #FFC800, #58CC02, #1CB0F6, #CE82FF, #FF7EB5);
-  background-size: 200% 100%;
-  animation: rainbow 3s linear infinite;
-}
-@keyframes rainbow {
-  0% { background-position: 0% 50%; }
-  100% { background-position: 200% 50%; }
-}
-
-/* Confetti */
-.confetti-piece {
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  animation: confettiFall 3s ease-out forwards;
-}
-@keyframes confettiFall {
-  0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
-  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-}
-
-/* Daily challenge streak */
-.streak-day {
-  transition: all 0.3s ease;
-}
-.streak-day.active {
-  transform: scale(1.1);
-  box-shadow: 0 0 15px rgba(255, 150, 0, 0.5);
-}
-
-/* Tooltip */
-.tooltip {
-  visibility: hidden;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-.has-tooltip:hover .tooltip {
-  visibility: visible;
-  opacity: 1;
-}
-
-/* Sound wave animation */
-.sound-wave {
-  display: flex;
-  align-items: center;
-  gap: 3px;
-}
-.sound-wave span {
-  width: 4px;
-  background: #58CC02;
-  border-radius: 2px;
-  animation: soundWave 1s ease-in-out infinite;
-}
-.sound-wave span:nth-child(2) { animation-delay: 0.1s; }
-.sound-wave span:nth-child(3) { animation-delay: 0.2s; }
-.sound-wave span:nth-child(4) { animation-delay: 0.3s; }
-@keyframes soundWave {
-  0%, 100% { height: 10px; }
-  50% { height: 25px; }
-}
-
-@media print {
-  .no-print { display: none !important; }
-}
+@media print{.no-print{display:none!important}}
 </style>
+<base target="_blank">
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body>
 
-<!-- GAME HEADER -->
+<!-- NAV -->
 <nav class="sticky top-0 z-50 bg-white border-b-2 border-gray-100 shadow-sm">
   <div class="max-w-5xl mx-auto px-4">
     <div class="flex items-center justify-between h-16">
-      <!-- Logo + Mascot -->
       <div class="flex items-center gap-3">
-        <div class="relative">
-          <div class="w-10 h-10 bg-gradient-to-br from-game-primary to-game-blue rounded-xl flex items-center justify-center text-white font-black text-xl shadow-lg mascot" id="headerMascot">
-            🔺
-          </div>
-          <div class="absolute -top-1 -right-1 w-4 h-4 bg-game-accent rounded-full flex items-center justify-center text-white text-xs font-bold animate-pulse">!</div>
-        </div>
+        <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-blue-500 rounded-xl flex items-center justify-center text-white font-black text-xl shadow-lg mascote">🔺</div>
         <div>
-          <h1 class="font-game font-bold text-lg text-game-dark leading-tight">TrigMaster</h1>
-          <p class="text-xs text-gray-400 font-semibold">4t ESO · Sabadell</p>
+          <h1 class="font-game font-bold text-lg text-gray-800">TrigMaster</h1>
+          <p class="text-xs text-gray-400 font-bold">4º ANO · MATEMÁTICA</p>
         </div>
       </div>
-
-      <!-- Stats Bar -->
-      <div class="flex items-center gap-4">
-        <!-- XP -->
-        <div class="hidden sm:flex items-center gap-2 bg-game-light rounded-full px-3 py-1.5">
-          <span class="text-lg">⚡</span>
-          <div class="w-20 h-2 bg-gray-200 rounded-full overflow-hidden">
-            <div id="xpBar" class="xp-bar-fill h-full bg-gradient-to-r from-game-primary to-game-blue rounded-full" style="width: 0%"></div>
+      <div class="flex items-center gap-3">
+        <div class="hidden sm:flex items-center gap-2 bg-gray-100 rounded-full px-3 py-1">
+          <span>⚡</span>
+          <div class="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div id="barraXP" class="xp-fill h-full bg-gradient-to-r from-green-500 to-blue-500 rounded-full" style="width:0%"></div>
           </div>
-          <span id="xpText" class="text-xs font-bold text-game-primary">0 XP</span>
+          <span id="textoXP" class="text-xs font-bold text-green-600">0 XP</span>
         </div>
-
-        <!-- Streak -->
-        <div class="flex items-center gap-1 bg-orange-50 rounded-full px-3 py-1.5 border border-orange-100">
-          <span class="text-lg streak-fire">🔥</span>
-          <span id="streakCount" class="text-sm font-bold text-orange-600">0</span>
+        <div class="flex items-center gap-1 bg-orange-50 rounded-full px-3 py-1 border border-orange-100">
+          <span class="text-lg">🔥</span>
+          <span id="contStreak" class="text-sm font-bold text-orange-600">0</span>
         </div>
-
-        <!-- Gems -->
-        <div class="flex items-center gap-1 bg-purple-50 rounded-full px-3 py-1.5 border border-purple-100">
+        <div class="flex items-center gap-1 bg-purple-50 rounded-full px-3 py-1 border border-purple-100">
           <span class="text-lg">💎</span>
-          <span id="gemCount" class="text-sm font-bold text-purple-600">0</span>
+          <span id="contGemas" class="text-sm font-bold text-purple-600">0</span>
         </div>
-
-        <!-- Level -->
-        <div class="w-9 h-9 bg-gradient-to-br from-game-secondary to-game-pink rounded-full flex items-center justify-center text-white font-bold text-sm shadow-md" id="levelBadge">
-          1
-        </div>
+        <div id="badgeNivel" class="w-9 h-9 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-sm">1</div>
       </div>
     </div>
   </div>
 </nav>
 
-<!-- HERO GAME -->
-<section id="inici" class="relative overflow-hidden bg-gradient-to-b from-white via-blue-50/30 to-purple-50/30 py-12">
-  <div class="max-w-5xl mx-auto px-4">
-    <div class="grid md:grid-cols-2 gap-8 items-center">
-      <!-- Left: Welcome -->
-      <div class="text-center md:text-left">
-        <div class="inline-flex items-center gap-2 bg-game-primary/10 text-game-primary rounded-full px-4 py-2 text-sm font-bold mb-4">
-          <span class="animate-bounce">🎮</span>
-          Modo Aprendizaje Viciante
+<!-- HERO -->
+<section class="relative overflow-hidden bg-gradient-to-b from-white via-blue-50/30 to-purple-50/30 py-12">
+  <div class="absolute inset-0 opacity-20 pointer-events-none">
+    <div class="absolute top-10 left-20 w-64 h-64 bg-sky-300 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-20 right-20 w-80 h-80 bg-purple-300 rounded-full blur-3xl"></div>
+  </div>
+  <div class="relative max-w-5xl mx-auto px-4">
+    <div class="grid lg:grid-cols-2 gap-10 items-center">
+      <div class="text-center lg:text-left">
+        <div class="inline-flex items-center gap-2 px-4 py-2 bg-green-100 text-green-700 rounded-full text-sm font-bold mb-5">
+          <span class="animate-bounce">🎮</span> Modo Aprendizado Viciante
         </div>
-
-        <h2 class="font-game text-4xl md:text-5xl font-bold text-game-dark mb-4 leading-tight">
-          Aprende Trig<br>
-          <span class="bg-gradient-to-r from-game-primary via-game-blue to-game-secondary bg-clip-text text-transparent">Jugando!</span>
-        </h2>
-
-        <p class="text-gray-600 text-lg mb-6">
-          5 minuts al dia. Nivells, recompenses, mascotes i reptes. <strong>Aprendras sense adonar-te'n!</strong>
-        </p>
-
-        <div class="flex flex-wrap gap-3 justify-center md:justify-start">
-          <button onclick="startGame()" class="btn-press px-8 py-4 bg-gradient-to-r from-game-primary to-game-blue text-white rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transition-all flex items-center gap-2 glow-green">
-            <span class="text-2xl">▶️</span>
-            Començar Ara
-          </button>
-          <button onclick="showContinue()" class="btn-press px-6 py-4 bg-white text-gray-700 rounded-2xl font-bold border-2 border-gray-200 hover:border-game-primary hover:text-game-primary transition-all">
-            Continuar ⏳
-          </button>
-        </div>
-
-        <!-- Quick Stats -->
-        <div class="flex gap-6 mt-8 justify-center md:justify-start">
-          <div class="text-center">
-            <p class="text-2xl font-black text-game-primary">📐</p>
-            <p class="text-xs text-gray-500 font-semibold">12 Nivells</p>
-          </div>
-          <div class="text-center">
-            <p class="text-2xl font-black text-game-accent">🏆</p>
-            <p class="text-xs text-gray-500 font-semibold">50 Reptes</p>
-          </div>
-          <div class="text-center">
-            <p class="text-2xl font-black text-game-secondary">⭐</p>
-            <p class="text-xs text-gray-500 font-semibold">20 Insignies</p>
-          </div>
+        <h2 class="font-game text-5xl md:text-6xl font-bold text-gray-800 mb-4">Aprenda Trig<br><span class="bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 bg-clip-text text-transparent">Jogando!</span></h2>
+        <p class="text-lg text-gray-600 mb-8">5 minutos por dia. Níveis, recompensas e desafios. <strong>Você vai aprender sem perceber!</strong></p>
+        <div class="flex flex-wrap gap-3 justify-center lg:justify-start">
+          <button id="btnComecar" class="btn-press px-8 py-4 bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl transition-all flex items-center gap-2">▶️ Começar Agora</button>
+          <button id="btnContinuar" class="btn-press px-6 py-4 bg-white text-gray-700 rounded-2xl font-bold border-2 border-gray-200 hover:border-green-500 hover:text-green-600 transition-all">Continuar ⏳</button>
         </div>
       </div>
-
-      <!-- Right: Mascot + Daily Challenge -->
       <div class="relative">
-        <!-- Mascot Speech Bubble -->
         <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
-          <div class="bg-white rounded-2xl shadow-lg px-4 py-3 border-2 border-game-primary/20 max-w-xs">
-            <p class="text-sm text-gray-700 font-semibold typing-text" id="mascotSpeech">Hola! Soc en Triqui! 🎉</p>
-            <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 w-4 h-4 bg-white border-r-2 border-b-2 border-game-primary/20 rotate-45"></div>
+          <div class="bg-white rounded-2xl shadow-lg px-4 py-3 border-2 border-green-200 max-w-xs relative">
+            <p class="text-sm text-gray-700 font-bold" id="falaMascote">Oi! Eu sou o Triqui! 🎉</p>
+            <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 w-4 h-4 bg-white border-r-2 border-b-2 border-green-200 rotate-45"></div>
           </div>
         </div>
-
-        <!-- Mascot Character -->
-        <div class="flex justify-center mb-6">
-          <div class="w-40 h-40 bg-gradient-to-br from-game-primary to-game-blue rounded-full flex items-center justify-center text-7xl shadow-2xl mascot cursor-pointer hover:scale-110 transition-transform" onclick="petMascot()" id="mainMascot">
-            🔺
-          </div>
+        <div class="flex justify-center mb-6 pt-8">
+          <div id="mascotePrincipal" class="w-40 h-40 bg-gradient-to-br from-green-500 to-blue-500 rounded-full flex items-center justify-center text-7xl shadow-2xl mascote cursor-pointer hover:scale-110 transition-transform">🔺</div>
         </div>
-
-        <!-- Daily Challenge Card -->
-        <div class="bg-white rounded-3xl shadow-lg border-2 border-orange-200 p-5">
+        <div class="bg-white rounded-3xl shadow-lg border-2 border-yellow-200 p-5">
           <div class="flex items-center justify-between mb-3">
-            <h3 class="font-game font-bold text-lg text-orange-600">🔥 Repte Diari</h3>
-            <span class="text-xs bg-orange-100 text-orange-700 px-2 py-1 rounded-full font-bold">+50 XP</span>
+            <h3 class="font-game font-bold text-lg text-green-600">🔥 Desafio Diário</h3>
+            <span class="text-xs bg-yellow-100 text-orange-700 px-2 py-1 rounded-full font-bold">+50 XP</span>
           </div>
-          <p class="text-gray-600 text-sm mb-3">Completa 3 exercicis avui per mantenir la teva ratxa!</p>
-
-          <!-- Streak Calendar -->
           <div class="flex justify-between gap-1">
-            <div class="streak-day active flex-1 bg-gradient-to-b from-orange-400 to-orange-500 rounded-xl p-2 text-center text-white">
-              <p class="text-xs font-bold">Dl</p>
-              <p class="text-lg">🔥</p>
-            </div>
-            <div class="streak-day active flex-1 bg-gradient-to-b from-orange-400 to-orange-500 rounded-xl p-2 text-center text-white">
-              <p class="text-xs font-bold">Dm</p>
-              <p class="text-lg">🔥</p>
-            </div>
-            <div class="streak-day active flex-1 bg-gradient-to-b from-orange-400 to-orange-500 rounded-xl p-2 text-center text-white">
-              <p class="text-xs font-bold">Dc</p>
-              <p class="text-lg">🔥</p>
-            </div>
-            <div class="streak-day flex-1 bg-gray-100 rounded-xl p-2 text-center text-gray-400 border-2 border-dashed border-gray-300">
-              <p class="text-xs font-bold">Dj</p>
-              <p class="text-lg">○</p>
-            </div>
-            <div class="streak-day flex-1 bg-gray-100 rounded-xl p-2 text-center text-gray-400">
-              <p class="text-xs font-bold">Dv</p>
-              <p class="text-lg">-</p>
-            </div>
-            <div class="streak-day flex-1 bg-gray-100 rounded-xl p-2 text-center text-gray-400">
-              <p class="text-xs font-bold">Ds</p>
-              <p class="text-lg">-</p>
-            </div>
-            <div class="streak-day flex-1 bg-gray-100 rounded-xl p-2 text-center text-gray-400">
-              <p class="text-xs font-bold">Dg</p>
-              <p class="text-lg">-</p>
-            </div>
+            <div class="streak-bar active flex-1 rounded-xl p-2 text-center text-white text-xs font-bold bg-gradient-to-b from-orange-400 to-orange-500">Dom<br>🔥</div>
+            <div class="streak-bar active flex-1 rounded-xl p-2 text-center text-white text-xs font-bold bg-gradient-to-b from-orange-400 to-orange-500">Seg<br>🔥</div>
+            <div class="streak-bar active flex-1 rounded-xl p-2 text-center text-white text-xs font-bold bg-gradient-to-b from-orange-400 to-orange-500">Ter<br>🔥</div>
+            <div class="streak-bar flex-1 rounded-xl p-2 text-center text-gray-400 text-xs font-bold bg-gray-100 border-2 border-dashed border-gray-300">Qua<br>○</div>
+            <div class="streak-bar flex-1 rounded-xl p-2 text-center text-gray-400 text-xs font-bold bg-gray-100">Qui<br>-</div>
+            <div class="streak-bar flex-1 rounded-xl p-2 text-center text-gray-400 text-xs font-bold bg-gray-100">Sex<br>-</div>
+            <div class="streak-bar flex-1 rounded-xl p-2 text-center text-gray-400 text-xs font-bold bg-gray-100">Sáb<br>-</div>
           </div>
         </div>
       </div>
@@ -463,1094 +152,480 @@ body { font-family: 'Nunito', sans-serif; background: #F7F7F7; }
   </div>
 </section>
 
-<!-- MAPA DE NIVELLS -->
-<section id="nivells" class="py-12 bg-white">
+<!-- MAPA -->
+<section class="py-12 bg-white">
   <div class="max-w-5xl mx-auto px-4">
     <div class="text-center mb-10">
-      <h2 class="font-game text-3xl font-bold text-game-dark mb-2">🗺️ Mapa d'Aventura</h2>
-      <p class="text-gray-500">Clica un nivell per començar! Cada un desbloqueja el següent.</p>
+      <h2 class="font-game text-3xl font-bold text-gray-800">🗺️ Mapa de Aventura</h2>
+      <p class="text-gray-500 mt-2">Clique em um nível para começar!</p>
     </div>
-
-    <!-- Path Line SVG Background -->
-    <div class="relative">
-      <svg class="absolute inset-0 w-full h-full" style="z-index: 0;" viewBox="0 0 800 600" preserveAspectRatio="none">
-        <path d="M 100 500 Q 200 400 150 300 Q 100 200 250 150 Q 400 100 550 150 Q 700 200 650 300 Q 600 400 700 500" 
-              fill="none" stroke="#E5E7EB" stroke-width="8" stroke-dasharray="15,10" stroke-linecap="round"/>
-        <path id="progressPath" d="M 100 500 Q 200 400 150 300 Q 100 200 250 150 Q 400 100 550 150 Q 700 200 650 300 Q 600 400 700 500" 
-              fill="none" stroke="#58CC02" stroke-width="8" stroke-dasharray="15,10" stroke-linecap="round" 
-              stroke-dashoffset="1000" style="transition: stroke-dashoffset 1s ease;"/>
-      </svg>
-
-      <!-- Level Nodes -->
-      <div class="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-6 py-8">
-        <!-- Level 1 -->
-        <div class="level-node cursor-pointer" onclick="openLevel(1)">
-          <div class="bg-gradient-to-br from-game-primary to-game-blue rounded-3xl p-6 shadow-lg hover:shadow-xl hover:scale-105 transition-all text-center border-4 border-white">
-            <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-3xl mx-auto mb-3 shadow-md">
-              📐
-            </div>
-            <h3 class="font-game font-bold text-white text-lg">Nivell 1</h3>
-            <p class="text-white/80 text-sm">SOH CAH TOA</p>
-            <div class="mt-3 flex justify-center gap-1">
-              <span class="text-yellow-300 text-lg">⭐</span>
-              <span class="text-yellow-300 text-lg">⭐</span>
-              <span class="text-gray-300/50 text-lg">⭐</span>
-            </div>
-          </div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="cursor-pointer" id="nivel1">
+        <div class="bg-gradient-to-br from-green-500 to-blue-500 rounded-3xl p-5 shadow-lg hover:shadow-xl hover:scale-105 transition-all text-center border-4 border-white relative">
+          <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-3xl mx-auto mb-2 shadow-md">📐</div>
+          <h3 class="font-game font-bold text-white text-lg">Nível 1</h3>
+          <p class="text-white/80 text-xs">SOH CAH TOA</p>
+          <div class="mt-2 flex justify-center gap-0.5"><span class="text-yellow-300 text-sm">⭐</span><span class="text-yellow-300 text-sm">⭐</span><span class="text-gray-300/50 text-sm">⭐</span></div>
+          <div class="absolute -top-2 -right-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow">INICIAR</div>
         </div>
-
-        <!-- Level 2 -->
-        <div class="level-node cursor-pointer" onclick="openLevel(2)">
-          <div class="bg-gradient-to-br from-game-blue to-purple-400 rounded-3xl p-6 shadow-lg hover:shadow-xl hover:scale-105 transition-all text-center border-4 border-white">
-            <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-3xl mx-auto mb-3 shadow-md">
-              📏
-            </div>
-            <h3 class="font-game font-bold text-white text-lg">Nivell 2</h3>
-            <p class="text-white/80 text-sm">El Triangle</p>
-            <div class="mt-3 flex justify-center gap-1">
-              <span class="text-yellow-300 text-lg">⭐</span>
-              <span class="text-gray-300/50 text-lg">⭐</span>
-              <span class="text-gray-300/50 text-lg">⭐</span>
-            </div>
-          </div>
+      </div>
+      <div class="cursor-pointer" id="nivel2">
+        <div class="bg-gradient-to-br from-blue-500 to-purple-500 rounded-3xl p-5 shadow-lg hover:shadow-xl hover:scale-105 transition-all text-center border-4 border-white relative">
+          <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-3xl mx-auto mb-2 shadow-md">📏</div>
+          <h3 class="font-game font-bold text-white text-lg">Nível 2</h3>
+          <p class="text-white/80 text-xs">O Triângulo</p>
+          <div class="mt-2 flex justify-center gap-0.5"><span class="text-gray-300/50 text-sm">⭐</span><span class="text-gray-300/50 text-sm">⭐</span><span class="text-gray-300/50 text-sm">⭐</span></div>
         </div>
-
-        <!-- Level 3 -->
-        <div class="level-node cursor-pointer" onclick="openLevel(3)">
-          <div class="bg-gradient-to-br from-purple-400 to-game-secondary rounded-3xl p-6 shadow-lg hover:shadow-xl hover:scale-105 transition-all text-center border-4 border-white">
-            <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-3xl mx-auto mb-3 shadow-md">
-              🔢
-            </div>
-            <h3 class="font-game font-bold text-white text-lg">Nivell 3</h3>
-            <p class="text-white/80 text-sm">Valors Notables</p>
-            <div class="mt-3 flex justify-center gap-1">
-              <span class="text-gray-300/50 text-lg">⭐</span>
-              <span class="text-gray-300/50 text-lg">⭐</span>
-              <span class="text-gray-300/50 text-lg">⭐</span>
-            </div>
-            <!-- Lock overlay -->
-            <div class="absolute inset-0 bg-black/30 rounded-3xl flex items-center justify-center">
-              <span class="text-4xl">🔒</span>
-            </div>
-          </div>
+      </div>
+      <div class="cursor-pointer" id="nivel3">
+        <div class="bg-gradient-to-br from-gray-300 to-gray-400 rounded-3xl p-5 shadow-lg text-center border-4 border-white relative grayscale opacity-70">
+          <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-3xl mx-auto mb-2 shadow-md">🔢</div>
+          <h3 class="font-game font-bold text-white text-lg">Nível 3</h3>
+          <p class="text-white/80 text-xs">Valores Notáveis</p>
+          <div class="absolute inset-0 bg-black/20 rounded-3xl flex items-center justify-center"><span class="text-3xl">🔒</span></div>
         </div>
-
-        <!-- Level 4 -->
-        <div class="level-node cursor-pointer" onclick="openLevel(4)">
-          <div class="bg-gradient-to-br from-game-secondary to-game-pink rounded-3xl p-6 shadow-lg hover:shadow-xl hover:scale-105 transition-all text-center border-4 border-white relative">
-            <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-3xl mx-auto mb-3 shadow-md">
-              🎯
-            </div>
-            <h3 class="font-game font-bold text-white text-lg">Nivell 4</h3>
-            <p class="text-white/80 text-sm">Exercicis Tipus</p>
-            <div class="mt-3 flex justify-center gap-1">
-              <span class="text-gray-300/50 text-lg">⭐</span>
-              <span class="text-gray-300/50 text-lg">⭐</span>
-              <span class="text-gray-300/50 text-lg">⭐</span>
-            </div>
-            <div class="absolute inset-0 bg-black/30 rounded-3xl flex items-center justify-center">
-              <span class="text-4xl">🔒</span>
-            </div>
-          </div>
+      </div>
+      <div class="cursor-pointer" id="nivel4">
+        <div class="bg-gradient-to-br from-gray-300 to-gray-400 rounded-3xl p-5 shadow-lg text-center border-4 border-white relative grayscale opacity-70">
+          <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-3xl mx-auto mb-2 shadow-md">🎯</div>
+          <h3 class="font-game font-bold text-white text-lg">Nível 4</h3>
+          <p class="text-white/80 text-xs">Prova Final</p>
+          <div class="absolute inset-0 bg-black/20 rounded-3xl flex items-center justify-center"><span class="text-3xl">🔒</span></div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- QUIZ INTERACTIU -->
-<section id="joc" class="py-12 bg-gradient-to-b from-blue-50/50 to-purple-50/50">
+<!-- QUIZ -->
+<section id="secaoQuiz" class="py-12 bg-gradient-to-b from-blue-50/50 to-purple-50/50">
   <div class="max-w-3xl mx-auto px-4">
     <div class="text-center mb-8">
-      <span class="inline-flex items-center gap-2 bg-game-accent/10 text-game-accent rounded-full px-4 py-2 text-sm font-bold mb-4">
-        <span class="animate-bounce">⚡</span>
-        Mode Rapid
-      </span>
-      <h2 class="font-game text-3xl font-bold text-game-dark">🎮 Quiz Interactiu</h2>
-      <p class="text-gray-500 mt-2">Respon correctament i guanya XP! Tens 3 vides.</p>
+      <h2 class="font-game text-3xl font-bold text-gray-800">🎮 Quiz Interativo</h2>
+      <p class="text-gray-500 mt-2">Responda corretamente e ganhe XP! Você tem 3 vidas.</p>
     </div>
-
-    <!-- Game Card -->
-    <div class="bg-white rounded-3xl shadow-xl border-2 border-gray-100 overflow-hidden" id="gameCard">
-      <!-- Game Header -->
-      <div class="bg-gradient-to-r from-game-primary to-game-blue p-4 flex items-center justify-between">
-        <div class="flex items-center gap-3">
+    <div class="bg-white rounded-3xl shadow-xl border-2 border-gray-100 overflow-hidden" id="cardQuiz">
+      <div class="bg-gradient-to-r from-green-500 to-blue-500 p-4 flex items-center justify-between">
+        <div class="flex items-center gap-2">
           <span class="text-2xl">❤️</span>
-          <div class="flex gap-1" id="livesContainer">
-            <span class="text-xl">❤️</span>
-            <span class="text-xl">❤️</span>
-            <span class="text-xl">❤️</span>
-          </div>
+          <div class="flex gap-1" id="containerVidas"><span class="text-xl heart-beat">❤️</span><span class="text-xl heart-beat">❤️</span><span class="text-xl heart-beat">❤️</span></div>
         </div>
         <div class="flex items-center gap-2 bg-white/20 rounded-full px-3 py-1">
-          <span class="text-sm font-bold text-white">Pregunta <span id="currentQ">1</span>/5</span>
+          <span class="text-sm font-bold text-white">Pergunta <span id="numPergunta">1</span>/5</span>
         </div>
         <div class="flex items-center gap-1">
           <span class="text-lg">⚡</span>
-          <span id="gameXP" class="text-sm font-bold text-white">0 XP</span>
+          <span id="xpQuiz" class="text-sm font-bold text-white">0 XP</span>
         </div>
       </div>
-
-      <!-- Question Area -->
       <div class="p-6 md:p-8">
-        <!-- Mascot Hint -->
         <div class="flex items-start gap-3 mb-6">
-          <div class="w-12 h-12 bg-gradient-to-br from-game-primary to-game-blue rounded-full flex items-center justify-center text-2xl flex-shrink-0 mascot">
-            🔺
-          </div>
+          <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-blue-500 rounded-full flex items-center justify-center text-2xl flex-shrink-0 mascote">🔺</div>
           <div class="bg-blue-50 rounded-2xl rounded-tl-none p-4 flex-1">
-            <p class="text-gray-700 font-semibold" id="questionText">Quina es la formula del SENO?</p>
+            <p class="text-gray-700 font-semibold text-lg" id="textoPergunta">Qual é a fórmula do SENO?</p>
           </div>
         </div>
-
-        <!-- Options -->
-        <div class="space-y-3" id="optionsContainer">
-          <button onclick="selectOption(this, 0)" class="quiz-option w-full text-left p-4 rounded-2xl border-2 border-gray-200 bg-white hover:bg-gray-50 font-semibold text-gray-700 flex items-center gap-3">
-            <span class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-sm font-bold text-gray-500">A</span>
-            <span>Cateto opuesto / Hipotenusa</span>
-          </button>
-          <button onclick="selectOption(this, 1)" class="quiz-option w-full text-left p-4 rounded-2xl border-2 border-gray-200 bg-white hover:bg-gray-50 font-semibold text-gray-700 flex items-center gap-3">
-            <span class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-sm font-bold text-gray-500">B</span>
-            <span>Cateto contiguo / Hipotenusa</span>
-          </button>
-          <button onclick="selectOption(this, 2)" class="quiz-option w-full text-left p-4 rounded-2xl border-2 border-gray-200 bg-white hover:bg-gray-50 font-semibold text-gray-700 flex items-center gap-3">
-            <span class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-sm font-bold text-gray-500">C</span>
-            <span>Opuesto / Contiguo</span>
-          </button>
-          <button onclick="selectOption(this, 3)" class="quiz-option w-full text-left p-4 rounded-2xl border-2 border-gray-200 bg-white hover:bg-gray-50 font-semibold text-gray-700 flex items-center gap-3">
-            <span class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-sm font-bold text-gray-500">D</span>
-            <span>Hipotenusa / Opuesto</span>
-          </button>
+        <div class="space-y-3" id="containerOpcoes">
+          <button class="quiz-opt w-full text-left p-4 rounded-2xl font-semibold text-gray-700 flex items-center gap-3" data-index="0"><span class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-sm font-bold text-gray-500">A</span><span>Cateto oposto / Hipotenusa</span></button>
+          <button class="quiz-opt w-full text-left p-4 rounded-2xl font-semibold text-gray-700 flex items-center gap-3" data-index="1"><span class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-sm font-bold text-gray-500">B</span><span>Cateto adjacente / Hipotenusa</span></button>
+          <button class="quiz-opt w-full text-left p-4 rounded-2xl font-semibold text-gray-700 flex items-center gap-3" data-index="2"><span class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-sm font-bold text-gray-500">C</span><span>Oposto / Adjacente</span></button>
+          <button class="quiz-opt w-full text-left p-4 rounded-2xl font-semibold text-gray-700 flex items-center gap-3" data-index="3"><span class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-sm font-bold text-gray-500">D</span><span>Hipotenusa / Oposto</span></button>
         </div>
-
-        <!-- Feedback Area (hidden initially) -->
-        <div id="feedbackArea" class="hidden mt-6">
-          <div id="correctFeedback" class="hidden bg-green-50 border-2 border-green-300 rounded-2xl p-4 flex items-center gap-3">
-            <span class="text-3xl">🎉</span>
-            <div>
-              <p class="font-bold text-green-700">Correcte! +20 XP</p>
-              <p class="text-green-600 text-sm">Molt be! Segueix aixi!</p>
-            </div>
-          </div>
-          <div id="wrongFeedback" class="hidden bg-red-50 border-2 border-red-300 rounded-2xl p-4 flex items-center gap-3">
-            <span class="text-3xl">😅</span>
-            <div>
-              <p class="font-bold text-red-700">Ups! No es correcte</p>
-              <p class="text-red-600 text-sm" id="correctAnswer">La resposta correcta es: Opuesto / Hipotenusa</p>
-            </div>
-          </div>
+        <div id="areaFeedback" class="hidden mt-6">
+          <div id="feedbackCerto" class="hidden bg-green-50 border-2 border-green-300 rounded-2xl p-4 flex items-center gap-3"><span class="text-3xl">🎉</span><div><p class="font-bold text-green-700 text-lg">Correto! +20 XP</p><p class="text-green-600 text-sm">Muito bem!</p></div></div>
+          <div id="feedbackErrado" class="hidden bg-red-50 border-2 border-red-300 rounded-2xl p-4 flex items-center gap-3"><span class="text-3xl">😅</span><div><p class="font-bold text-red-700 text-lg">Ops!</p><p class="text-red-600 text-sm" id="textoRespostaCorreta"></p></div></div>
         </div>
-
-        <!-- Next Button -->
         <div class="mt-6 flex justify-between items-center">
-          <button onclick="useHint()" class="flex items-center gap-2 px-4 py-2 bg-yellow-100 text-yellow-700 rounded-xl font-semibold text-sm hover:bg-yellow-200 transition-all">
-            <span>💡</span>
-            Pista (-5 💎)
-          </button>
-          <button onclick="nextQuestion()" id="nextBtn" class="hidden px-6 py-3 bg-game-primary text-white rounded-xl font-bold hover:bg-green-600 transition-all flex items-center gap-2">
-            Següent
-            <span>→</span>
-          </button>
+          <button id="btnDica" class="flex items-center gap-2 px-4 py-2 bg-yellow-100 text-yellow-700 rounded-xl font-semibold text-sm hover:bg-yellow-200 transition-all btn-press">💡 Dica (-5 💎)</button>
+          <button id="btnProxima" class="hidden px-6 py-3 bg-green-500 text-white rounded-xl font-bold hover:bg-green-600 transition-all flex items-center gap-2 btn-press">Próxima →</button>
         </div>
       </div>
-    </div>
-
-    <!-- Mini Games Row -->
-    <div class="grid grid-cols-3 gap-4 mt-8">
-      <button onclick="startMiniGame('memory')" class="btn-press bg-gradient-to-br from-game-secondary to-purple-400 rounded-2xl p-4 text-center text-white hover:shadow-lg transition-all">
-        <span class="text-3xl block mb-2">🧠</span>
-        <p class="font-bold text-sm">Memoria</p>
-        <p class="text-xs text-white/70">Valors notables</p>
-      </button>
-      <button onclick="startMiniGame('speed')" class="btn-press bg-gradient-to-br from-game-accent to-orange-400 rounded-2xl p-4 text-center text-white hover:shadow-lg transition-all">
-        <span class="text-3xl block mb-2">⚡</span>
-        <p class="font-bold text-sm">Velocitat</p>
-        <p class="text-xs text-white/70">30 segons</p>
-      </button>
-      <button onclick="startMiniGame('match')" class="btn-press bg-gradient-to-br from-game-blue to-cyan-400 rounded-2xl p-4 text-center text-white hover:shadow-lg transition-all">
-        <span class="text-3xl block mb-2">🎯</span>
-        <p class="font-bold text-sm">Parelles</p>
-        <p class="text-xs text-white/70">Formules</p>
-      </button>
     </div>
   </div>
 </section>
 
-<!-- FLASHCARDS FLIP -->
-<section id="flashcards" class="py-12 bg-white">
+<!-- FLASHCARDS -->
+<section class="py-12 bg-white">
   <div class="max-w-4xl mx-auto px-4">
     <div class="text-center mb-10">
-      <span class="inline-flex items-center gap-2 bg-game-blue/10 text-game-blue rounded-full px-4 py-2 text-sm font-bold mb-4">
-        <span class="animate-pulse">📇</span>
-        Targetes Magiques
-      </span>
-      <h2 class="font-game text-3xl font-bold text-game-dark">🎴 Flashcards Flip</h2>
-      <p class="text-gray-500 mt-2">Clica per girar! Memoritza jugant.</p>
+      <h2 class="font-game text-3xl font-bold text-gray-800">🎴 Cartões Mágicos</h2>
+      <p class="text-gray-500 mt-2">Clique para virar! Cada virada = +5 XP</p>
     </div>
-
     <div class="grid md:grid-cols-3 gap-6">
-      <!-- Card 1 -->
-      <div class="flip-card h-48 cursor-pointer" onclick="flipCard(this)">
-        <div class="flip-card-inner relative w-full h-full">
-          <!-- Front -->
-          <div class="flip-card-front absolute w-full h-full bg-gradient-to-br from-game-primary to-game-blue rounded-2xl shadow-lg flex flex-col items-center justify-center text-white p-4 border-4 border-white">
-            <span class="text-4xl mb-2">📐</span>
-            <h3 class="font-game font-bold text-xl">sin α</h3>
-            <p class="text-sm text-white/80 mt-1">Clica per veure</p>
-          </div>
-          <!-- Back -->
-          <div class="flip-card-back absolute w-full h-full bg-white rounded-2xl shadow-lg flex flex-col items-center justify-center p-4 border-4 border-game-primary">
-            <p class="font-mono text-2xl font-bold text-game-primary">o / h</p>
-            <p class="text-gray-500 text-sm mt-2 text-center">Opuesto / Hipotenusa</p>
-            <p class="text-xs text-gray-400 mt-1">SOH → Sine = Opposite / Hypotenuse</p>
-          </div>
+      <div class="flip-card" id="card1">
+        <div class="flip-inner">
+          <div class="flip-front bg-gradient-to-br from-green-500 to-blue-500 text-white border-4 border-white shadow-lg"><span class="text-4xl mb-2">📐</span><h3 class="font-game font-bold text-xl">sin α</h3><p class="text-sm text-white/80 mt-1">Clique para ver</p></div>
+          <div class="flip-back bg-white border-4 border-green-500 shadow-lg"><p class="font-mono text-2xl font-bold text-green-600">o / h</p><p class="text-gray-500 text-sm mt-2">Oposto / Hipotenusa</p></div>
         </div>
       </div>
-
-      <!-- Card 2 -->
-      <div class="flip-card h-48 cursor-pointer" onclick="flipCard(this)">
-        <div class="flip-card-inner relative w-full h-full">
-          <div class="flip-card-front absolute w-full h-full bg-gradient-to-br from-game-secondary to-purple-400 rounded-2xl shadow-lg flex flex-col items-center justify-center text-white p-4 border-4 border-white">
-            <span class="text-4xl mb-2">📏</span>
-            <h3 class="font-game font-bold text-xl">cos α</h3>
-            <p class="text-sm text-white/80 mt-1">Clica per veure</p>
-          </div>
-          <div class="flip-card-back absolute w-full h-full bg-white rounded-2xl shadow-lg flex flex-col items-center justify-center p-4 border-4 border-game-secondary">
-            <p class="font-mono text-2xl font-bold text-game-secondary">c / h</p>
-            <p class="text-gray-500 text-sm mt-2 text-center">Contiguo / Hipotenusa</p>
-            <p class="text-xs text-gray-400 mt-1">CAH → Cosine = Adjacent / Hypotenuse</p>
-          </div>
+      <div class="flip-card" id="card2">
+        <div class="flip-inner">
+          <div class="flip-front bg-gradient-to-br from-purple-500 to-purple-700 text-white border-4 border-white shadow-lg"><span class="text-4xl mb-2">📏</span><h3 class="font-game font-bold text-xl">cos α</h3><p class="text-sm text-white/80 mt-1">Clique para ver</p></div>
+          <div class="flip-back bg-white border-4 border-purple-500 shadow-lg"><p class="font-mono text-2xl font-bold text-purple-600">c / h</p><p class="text-gray-500 text-sm mt-2">Adjacente / Hipotenusa</p></div>
         </div>
       </div>
-
-      <!-- Card 3 -->
-      <div class="flip-card h-48 cursor-pointer" onclick="flipCard(this)">
-        <div class="flip-card-inner relative w-full h-full">
-          <div class="flip-card-front absolute w-full h-full bg-gradient-to-br from-game-accent to-orange-400 rounded-2xl shadow-lg flex flex-col items-center justify-center text-white p-4 border-4 border-white">
-            <span class="text-4xl mb-2">🔺</span>
-            <h3 class="font-game font-bold text-xl">tan α</h3>
-            <p class="text-sm text-white/80 mt-1">Clica per veure</p>
-          </div>
-          <div class="flip-card-back absolute w-full h-full bg-white rounded-2xl shadow-lg flex flex-col items-center justify-center p-4 border-4 border-game-accent">
-            <p class="font-mono text-2xl font-bold text-game-accent">o / c</p>
-            <p class="text-gray-500 text-sm mt-2 text-center">Opuesto / Contiguo</p>
-            <p class="text-xs text-gray-400 mt-1">TOA → Tangent = Opposite / Adjacent</p>
-          </div>
+      <div class="flip-card" id="card3">
+        <div class="flip-inner">
+          <div class="flip-front bg-gradient-to-br from-yellow-500 to-orange-500 text-white border-4 border-white shadow-lg"><span class="text-4xl mb-2">🔺</span><h3 class="font-game font-bold text-xl">tan α</h3><p class="text-sm text-white/80 mt-1">Clique para ver</p></div>
+          <div class="flip-back bg-white border-4 border-yellow-500 shadow-lg"><p class="font-mono text-2xl font-bold text-yellow-600">o / c</p><p class="text-gray-500 text-sm mt-2">Oposto / Adjacente</p></div>
         </div>
       </div>
-
-      <!-- Card 4 -->
-      <div class="flip-card h-48 cursor-pointer" onclick="flipCard(this)">
-        <div class="flip-card-inner relative w-full h-full">
-          <div class="flip-card-front absolute w-full h-full bg-gradient-to-br from-game-blue to-cyan-400 rounded-2xl shadow-lg flex flex-col items-center justify-center text-white p-4 border-4 border-white">
-            <span class="text-4xl mb-2">📐</span>
-            <h3 class="font-game font-bold text-xl">sin 30°</h3>
-            <p class="text-sm text-white/80 mt-1">Valor notable</p>
-          </div>
-          <div class="flip-card-back absolute w-full h-full bg-white rounded-2xl shadow-lg flex flex-col items-center justify-center p-4 border-4 border-game-blue">
-            <p class="font-mono text-3xl font-bold text-game-blue">1/2</p>
-            <p class="text-gray-500 text-sm mt-2">= 0,5</p>
-          </div>
+      <div class="flip-card" id="card4">
+        <div class="flip-inner">
+          <div class="flip-front bg-gradient-to-br from-blue-500 to-cyan-500 text-white border-4 border-white shadow-lg"><span class="text-4xl mb-2">📐</span><h3 class="font-game font-bold text-xl">sin 30°</h3><p class="text-sm text-white/80 mt-1">Valor notável</p></div>
+          <div class="flip-back bg-white border-4 border-blue-500 shadow-lg"><p class="font-mono text-3xl font-bold text-blue-600">1/2</p><p class="text-gray-500 text-sm mt-2">= 0,5</p></div>
         </div>
       </div>
-
-      <!-- Card 5 -->
-      <div class="flip-card h-48 cursor-pointer" onclick="flipCard(this)">
-        <div class="flip-card-inner relative w-full h-full">
-          <div class="flip-card-front absolute w-full h-full bg-gradient-to-br from-game-pink to-rose-400 rounded-2xl shadow-lg flex flex-col items-center justify-center text-white p-4 border-4 border-white">
-            <span class="text-4xl mb-2">📐</span>
-            <h3 class="font-game font-bold text-xl">cos 45°</h3>
-            <p class="text-sm text-white/80 mt-1">Valor notable</p>
-          </div>
-          <div class="flip-card-back absolute w-full h-full bg-white rounded-2xl shadow-lg flex flex-col items-center justify-center p-4 border-4 border-game-pink">
-            <p class="font-mono text-3xl font-bold text-game-pink">√2/2</p>
-            <p class="text-gray-500 text-sm mt-2">≈ 0,707</p>
-          </div>
+      <div class="flip-card" id="card5">
+        <div class="flip-inner">
+          <div class="flip-front bg-gradient-to-br from-pink-400 to-rose-500 text-white border-4 border-white shadow-lg"><span class="text-4xl mb-2">📐</span><h3 class="font-game font-bold text-xl">cos 45°</h3><p class="text-sm text-white/80 mt-1">Valor notável</p></div>
+          <div class="flip-back bg-white border-4 border-pink-400 shadow-lg"><p class="font-mono text-3xl font-bold text-pink-500">√2/2</p><p class="text-gray-500 text-sm mt-2">≈ 0,707</p></div>
         </div>
       </div>
-
-      <!-- Card 6 -->
-      <div class="flip-card h-48 cursor-pointer" onclick="flipCard(this)">
-        <div class="flip-card-inner relative w-full h-full">
-          <div class="flip-card-front absolute w-full h-full bg-gradient-to-br from-game-yellow to-amber-400 rounded-2xl shadow-lg flex flex-col items-center justify-center text-white p-4 border-4 border-white">
-            <span class="text-4xl mb-2">📐</span>
-            <h3 class="font-game font-bold text-xl">tan 60°</h3>
-            <p class="text-sm text-white/80 mt-1">Valor notable</p>
-          </div>
-          <div class="flip-card-back absolute w-full h-full bg-white rounded-2xl shadow-lg flex flex-col items-center justify-center p-4 border-4 border-game-yellow">
-            <p class="font-mono text-3xl font-bold text-game-yellow">√3</p>
-            <p class="text-gray-500 text-sm mt-2">≈ 1,732</p>
-          </div>
+      <div class="flip-card" id="card6">
+        <div class="flip-inner">
+          <div class="flip-front bg-gradient-to-br from-yellow-500 to-amber-500 text-white border-4 border-white shadow-lg"><span class="text-4xl mb-2">📐</span><h3 class="font-game font-bold text-xl">tan 60°</h3><p class="text-sm text-white/80 mt-1">Valor notável</p></div>
+          <div class="flip-back bg-white border-4 border-yellow-500 shadow-lg"><p class="font-mono text-3xl font-bold text-yellow-600">√3</p><p class="text-gray-500 text-sm mt-2">≈ 1,732</p></div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- CONQUESTES / BADGES -->
-<section id="conquestes" class="py-12 bg-gradient-to-b from-purple-50/50 to-pink-50/50">
+<!-- CONQUISTAS -->
+<section class="py-12 bg-gradient-to-b from-purple-50/50 to-pink-50/50">
   <div class="max-w-5xl mx-auto px-4">
     <div class="text-center mb-10">
-      <span class="inline-flex items-center gap-2 bg-game-secondary/10 text-game-secondary rounded-full px-4 py-2 text-sm font-bold mb-4">
-        <span class="animate-wiggle">🏆</span>
-        Recompenses
-      </span>
-      <h2 class="font-game text-3xl font-bold text-game-dark">🎖️ Les Teves Conquestes</h2>
-      <p class="text-gray-500 mt-2">Completa reptes per desbloquejar insignies!</p>
+      <h2 class="font-game text-3xl font-bold text-gray-800">🏆 Suas Conquistas</h2>
     </div>
-
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-      <!-- Badge 1 -->
-      <div class="bg-white rounded-2xl p-4 text-center border-2 border-gray-100 hover:border-game-primary hover:shadow-lg transition-all cursor-pointer group">
-        <div class="w-16 h-16 bg-gradient-to-br from-game-primary to-game-blue rounded-full flex items-center justify-center text-3xl mx-auto mb-3 group-hover:scale-110 transition-transform">
-          🌱
-        </div>
-        <h4 class="font-bold text-game-dark text-sm">Primer Passa</h4>
-        <p class="text-xs text-gray-400 mt-1">Completa 1 nivell</p>
-        <div class="mt-2 bg-game-primary/10 rounded-full px-2 py-1">
-          <span class="text-xs font-bold text-game-primary">✓ Obtinguda!</span>
-        </div>
-      </div>
-
-      <!-- Badge 2 -->
-      <div class="bg-white rounded-2xl p-4 text-center border-2 border-gray-100 hover:border-game-accent hover:shadow-lg transition-all cursor-pointer group">
-        <div class="w-16 h-16 bg-gradient-to-br from-game-accent to-orange-400 rounded-full flex items-center justify-center text-3xl mx-auto mb-3 group-hover:scale-110 transition-transform">
-          🔥
-        </div>
-        <h4 class="font-bold text-game-dark text-sm">Ratxa de 3</h4>
-        <p class="text-xs text-gray-400 mt-1">3 dies seguits</p>
-        <div class="mt-2 bg-game-accent/10 rounded-full px-2 py-1">
-          <span class="text-xs font-bold text-game-accent">✓ Obtinguda!</span>
-        </div>
-      </div>
-
-      <!-- Badge 3 -->
-      <div class="bg-white rounded-2xl p-4 text-center border-2 border-gray-100 hover:border-game-secondary hover:shadow-lg transition-all cursor-pointer group">
-        <div class="w-16 h-16 bg-gradient-to-br from-gray-200 to-gray-300 rounded-full flex items-center justify-center text-3xl mx-auto mb-3 grayscale">
-          🧠
-        </div>
-        <h4 class="font-bold text-game-dark text-sm">Mestre de Memoria</h4>
-        <p class="text-xs text-gray-400 mt-1">10 flashcards seguides</p>
-        <div class="mt-2 bg-gray-100 rounded-full px-2 py-1">
-          <span class="text-xs font-bold text-gray-400">🔒 Bloquejada</span>
-        </div>
-      </div>
-
-      <!-- Badge 4 -->
-      <div class="bg-white rounded-2xl p-4 text-center border-2 border-gray-100 hover:border-game-blue hover:shadow-lg transition-all cursor-pointer group">
-        <div class="w-16 h-16 bg-gradient-to-br from-gray-200 to-gray-300 rounded-full flex items-center justify-center text-3xl mx-auto mb-3 grayscale">
-          ⚡
-        </div>
-        <h4 class="font-bold text-game-dark text-sm">Velocista</h4>
-        <p class="text-xs text-gray-400 mt-1">5 correctes en 30s</p>
-        <div class="mt-2 bg-gray-100 rounded-full px-2 py-1">
-          <span class="text-xs font-bold text-gray-400">🔒 Bloquejada</span>
-        </div>
-      </div>
-
-      <!-- Badge 5 -->
-      <div class="bg-white rounded-2xl p-4 text-center border-2 border-gray-100 hover:border-game-pink hover:shadow-lg transition-all cursor-pointer group">
-        <div class="w-16 h-16 bg-gradient-to-br from-gray-200 to-gray-300 rounded-full flex items-center justify-center text-3xl mx-auto mb-3 grayscale">
-          💎
-        </div>
-        <h4 class="font-bold text-game-dark text-sm">Col·leccionista</h4>
-        <p class="text-xs text-gray-400 mt-1">100 gemes acumulades</p>
-        <div class="mt-2 bg-gray-100 rounded-full px-2 py-1">
-          <span class="text-xs font-bold text-gray-400">🔒 Bloquejada</span>
-        </div>
-      </div>
-
-      <!-- Badge 6 -->
-      <div class="bg-white rounded-2xl p-4 text-center border-2 border-gray-100 hover:border-game-yellow hover:shadow-lg transition-all cursor-pointer group">
-        <div class="w-16 h-16 bg-gradient-to-br from-gray-200 to-gray-300 rounded-full flex items-center justify-center text-3xl mx-auto mb-3 grayscale">
-          🎯
-        </div>
-        <h4 class="font-bold text-game-dark text-sm">Tirador Expert</h4>
-        <p class="text-xs text-gray-400 mt-1">100% en un nivell</p>
-        <div class="mt-2 bg-gray-100 rounded-full px-2 py-1">
-          <span class="text-xs font-bold text-gray-400">🔒 Bloquejada</span>
-        </div>
-      </div>
-
-      <!-- Badge 7 -->
-      <div class="bg-white rounded-2xl p-4 text-center border-2 border-gray-100 hover:border-red-400 hover:shadow-lg transition-all cursor-pointer group">
-        <div class="w-16 h-16 bg-gradient-to-br from-gray-200 to-gray-300 rounded-full flex items-center justify-center text-3xl mx-auto mb-3 grayscale">
-          👑
-        </div>
-        <h4 class="font-bold text-game-dark text-sm">Rei de la Trig</h4>
-        <p class="text-xs text-gray-400 mt-1">Completa tots els nivells</p>
-        <div class="mt-2 bg-gray-100 rounded-full px-2 py-1">
-          <span class="text-xs font-bold text-gray-400">🔒 Bloquejada</span>
-        </div>
-      </div>
-
-      <!-- Badge 8 -->
-      <div class="bg-white rounded-2xl p-4 text-center border-2 border-gray-100 hover:border-game-primary hover:shadow-lg transition-all cursor-pointer group">
-        <div class="w-16 h-16 bg-gradient-to-br from-gray-200 to-gray-300 rounded-full flex items-center justify-center text-3xl mx-auto mb-3 grayscale">
-          🎓
-        </div>
-        <h4 class="font-bold text-game-dark text-sm">Graduat</h4>
-        <p class="text-xs text-gray-400 mt-1">Aprova l'examen final</p>
-        <div class="mt-2 bg-gray-100 rounded-full px-2 py-1">
-          <span class="text-xs font-bold text-gray-400">🔒 Bloquejada</span>
-        </div>
-      </div>
+      <div class="bg-white rounded-2xl p-4 text-center border-2 border-gray-100 shadow-sm"><div class="w-16 h-16 bg-gradient-to-br from-green-500 to-blue-500 rounded-full flex items-center justify-center text-3xl mx-auto mb-3">🌱</div><h4 class="font-bold text-gray-800 text-sm">Primeiro Passo</h4><p class="text-xs text-gray-400">Complete 1 nível</p><div class="mt-2 bg-green-100 rounded-full px-2 py-1"><span class="text-xs font-bold text-green-600">✓ Conquistada!</span></div></div>
+      <div class="bg-white rounded-2xl p-4 text-center border-2 border-gray-100 shadow-sm"><div class="w-16 h-16 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-full flex items-center justify-center text-3xl mx-auto mb-3">🔥</div><h4 class="font-bold text-gray-800 text-sm">Streak de 3</h4><p class="text-xs text-gray-400">3 dias seguidos</p><div class="mt-2 bg-yellow-100 rounded-full px-2 py-1"><span class="text-xs font-bold text-orange-600">✓ Conquistada!</span></div></div>
+      <div class="bg-white rounded-2xl p-4 text-center border-2 border-gray-100 shadow-sm"><div class="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center text-3xl mx-auto mb-3 grayscale">🧠</div><h4 class="font-bold text-gray-800 text-sm">Mestre da Memória</h4><p class="text-xs text-gray-400">10 flashcards</p><div class="mt-2 bg-gray-100 rounded-full px-2 py-1"><span class="text-xs font-bold text-gray-400">🔒 Bloqueada</span></div></div>
+      <div class="bg-white rounded-2xl p-4 text-center border-2 border-gray-100 shadow-sm"><div class="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center text-3xl mx-auto mb-3 grayscale">⚡</div><h4 class="font-bold text-gray-800 text-sm">Velocista</h4><p class="text-xs text-gray-400">5 corretas em 30s</p><div class="mt-2 bg-gray-100 rounded-full px-2 py-1"><span class="text-xs font-bold text-gray-400">🔒 Bloqueada</span></div></div>
     </div>
   </div>
 </section>
 
-<!-- RANKING AMICS -->
-<section id="ranking" class="py-12 bg-white">
-  <div class="max-w-3xl mx-auto px-4">
-    <div class="text-center mb-8">
-      <span class="inline-flex items-center gap-2 bg-game-blue/10 text-game-blue rounded-full px-4 py-2 text-sm font-bold mb-4">
-        <span class="animate-bounce">🏆</span>
-        Competició Amistosa
-      </span>
-      <h2 class="font-game text-3xl font-bold text-game-dark">📊 Ranking de Classe</h2>
-    </div>
-
-    <div class="bg-white rounded-3xl shadow-lg border-2 border-gray-100 overflow-hidden">
-      <!-- Header -->
-      <div class="bg-gradient-to-r from-game-primary to-game-blue p-4">
-        <div class="flex items-center justify-between text-white">
-          <span class="font-bold">Posició</span>
-          <span class="font-bold">Jugador</span>
-          <span class="font-bold">XP</span>
-        </div>
-      </div>
-
-      <!-- You (highlighted) -->
-      <div class="bg-game-primary/10 p-4 flex items-center gap-4 border-l-4 border-game-primary">
-        <span class="text-2xl font-black text-game-primary w-8">4</span>
-        <div class="w-10 h-10 bg-gradient-to-br from-game-primary to-game-blue rounded-full flex items-center justify-center text-white font-bold">TU</div>
-        <div class="flex-1">
-          <p class="font-bold text-game-dark">Tu (Nivell 3)</p>
-          <div class="w-full bg-gray-200 rounded-full h-2 mt-1">
-            <div class="bg-game-primary h-2 rounded-full" style="width: 45%"></div>
-          </div>
-        </div>
-        <span class="font-bold text-game-primary text-lg">450 XP</span>
-      </div>
-
-      <!-- Other players -->
-      <div class="divide-y divide-gray-100">
-        <div class="p-4 flex items-center gap-4 hover:bg-gray-50 transition-colors">
-          <span class="text-xl font-bold text-yellow-500 w-8">1</span>
-          <div class="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-400 rounded-full flex items-center justify-center text-white text-lg">🥇</div>
-          <div class="flex-1">
-            <p class="font-bold text-game-dark">Maria G.</p>
-            <p class="text-xs text-gray-400">Nivell 8 · Ratxa 12 🔥</p>
-          </div>
-          <span class="font-bold text-gray-700">1.240 XP</span>
-        </div>
-
-        <div class="p-4 flex items-center gap-4 hover:bg-gray-50 transition-colors">
-          <span class="text-xl font-bold text-gray-400 w-8">2</span>
-          <div class="w-10 h-10 bg-gradient-to-br from-gray-300 to-gray-400 rounded-full flex items-center justify-center text-white text-lg">🥈</div>
-          <div class="flex-1">
-            <p class="font-bold text-game-dark">Pau R.</p>
-            <p class="text-xs text-gray-400">Nivell 6 · Ratxa 5 🔥</p>
-          </div>
-          <span class="font-bold text-gray-700">890 XP</span>
-        </div>
-
-        <div class="p-4 flex items-center gap-4 hover:bg-gray-50 transition-colors">
-          <span class="text-xl font-bold text-orange-600 w-8">3</span>
-          <div class="w-10 h-10 bg-gradient-to-br from-orange-300 to-orange-400 rounded-full flex items-center justify-center text-white text-lg">🥉</div>
-          <div class="flex-1">
-            <p class="font-bold text-game-dark">Laia M.</p>
-            <p class="text-xs text-gray-400">Nivell 5 · Ratxa 8 🔥</p>
-          </div>
-          <span class="font-bold text-gray-700">720 XP</span>
-        </div>
-      </div>
-    </div>
-
-    <p class="text-center text-gray-400 text-sm mt-4">💡 Completa mes reptes per pujar al ranking!</p>
-  </div>
-</section>
-
-<!-- MASCOTE INTERACTIU -->
-<section id="mascota" class="py-12 bg-gradient-to-b from-game-primary/5 to-game-blue/5">
+<!-- MASCOTE INTERATIVO -->
+<section class="py-12 bg-gradient-to-b from-green-50 to-blue-50">
   <div class="max-w-4xl mx-auto px-4 text-center">
-    <h2 class="font-game text-3xl font-bold text-game-dark mb-8">🐱 En Triqui, el teu Company</h2>
-
+    <h2 class="font-game text-3xl font-bold text-gray-800 mb-8">🐱 Interaja com o Triqui</h2>
     <div class="relative inline-block">
-      <div class="w-48 h-48 bg-gradient-to-br from-game-primary to-game-blue rounded-full flex items-center justify-center text-8xl shadow-2xl cursor-pointer mascot hover:scale-110 transition-transform" onclick="interactMascot()" id="interactiveMascot">
-        🔺
-      </div>
-      <div class="absolute -top-2 -right-2 w-12 h-12 bg-game-accent rounded-full flex items-center justify-center text-white text-2xl animate-bounce">
-        ✨
-      </div>
+      <div id="mascoteInterativo" class="w-48 h-48 bg-gradient-to-br from-green-500 to-blue-500 rounded-full flex items-center justify-center text-8xl shadow-2xl mascote cursor-pointer hover:scale-110 transition-transform">🔺</div>
+      <div class="absolute -top-2 -right-2 w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center text-white text-2xl animate-bounce">✨</div>
     </div>
-
-    <div class="mt-6 bg-white rounded-2xl shadow-lg p-6 max-w-lg mx-auto border-2 border-game-primary/20">
-      <p class="text-gray-700 font-semibold text-lg" id="mascotDialog">"Hola! Clica'm per animar-me! 🎉"</p>
+    <div class="mt-6 bg-white rounded-2xl shadow-lg p-6 max-w-lg mx-auto border-2 border-green-200">
+      <p class="text-gray-700 font-semibold text-lg" id="dialogoMascote">"Oi! Quer aprender trig comigo?"</p>
       <div class="flex justify-center gap-3 mt-4">
-        <button onclick="feedMascot()" class="btn-press px-4 py-2 bg-game-accent text-white rounded-xl font-bold text-sm hover:shadow-md transition-all">
-          🍕 Donar menjar
-        </button>
-        <button onclick="petMascot()" class="btn-press px-4 py-2 bg-game-secondary text-white rounded-xl font-bold text-sm hover:shadow-md transition-all">
-          🖐️ Acaronar
-        </button>
-        <button onclick="danceMascot()" class="btn-press px-4 py-2 bg-game-blue text-white rounded-xl font-bold text-sm hover:shadow-md transition-all">
-          💃 Ballar
-        </button>
-      </div>
-    </div>
-
-    <!-- Mascot Stats -->
-    <div class="grid grid-cols-3 gap-4 mt-6 max-w-md mx-auto">
-      <div class="bg-white rounded-xl p-3 shadow-md">
-        <p class="text-2xl">😊</p>
-        <p class="text-xs font-bold text-gray-600">Felicidad</p>
-        <div class="w-full bg-gray-200 rounded-full h-2 mt-1">
-          <div class="bg-game-pink h-2 rounded-full" style="width: 80%"></div>
-        </div>
-      </div>
-      <div class="bg-white rounded-xl p-3 shadow-md">
-        <p class="text-2xl">⚡</p>
-        <p class="text-xs font-bold text-gray-600">Energia</p>
-        <div class="w-full bg-gray-200 rounded-full h-2 mt-1">
-          <div class="bg-game-yellow h-2 rounded-full" style="width: 65%"></div>
-        </div>
-      </div>
-      <div class="bg-white rounded-xl p-3 shadow-md">
-        <p class="text-2xl">🎯</p>
-        <p class="text-xs font-bold text-gray-600">Experiencia</p>
-        <div class="w-full bg-gray-200 rounded-full h-2 mt-1">
-          <div class="bg-game-primary h-2 rounded-full" style="width: 40%"></div>
-        </div>
+        <button id="btnComida" class="btn-press px-4 py-2 bg-yellow-400 text-white rounded-xl font-bold text-sm">🍕 Comida</button>
+        <button id="btnCarinho" class="btn-press px-4 py-2 bg-purple-500 text-white rounded-xl font-bold text-sm">🖐️ Carinho</button>
+        <button id="btnDanca" class="btn-press px-4 py-2 bg-blue-500 text-white rounded-xl font-bold text-sm">💃 Dança</button>
       </div>
     </div>
   </div>
 </section>
 
 <!-- FOOTER -->
-<footer class="bg-game-dark text-white py-8">
+<footer class="bg-gray-800 text-white py-8">
   <div class="max-w-5xl mx-auto px-4 text-center">
-    <div class="w-16 h-16 bg-gradient-to-br from-game-primary to-game-blue rounded-2xl flex items-center justify-center text-4xl mx-auto mb-4 shadow-lg">
-      🔺
-    </div>
-    <h3 class="font-game font-bold text-2xl mb-2">TrigMaster</h3>
-    <p class="text-gray-400 text-sm mb-4">Aprendre trigonometria jugant · 4t ESO · Sabadell</p>
-    <div class="flex justify-center gap-6 text-sm text-gray-500">
-      <span>📐 12 Nivells</span>
-      <span>🏆 8 Conquestes</span>
-      <span>🎮 3 Mini-jocs</span>
-      <span>⭐ Infinita diversio</span>
-    </div>
-    <p class="text-gray-600 text-xs mt-6">Fet amb ❤️ per aprendre sense adonar-se'n</p>
+    <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-blue-500 rounded-2xl flex items-center justify-center text-4xl mx-auto mb-4">🔺</div>
+    <h3 class="font-game font-bold text-2xl">TrigMaster BR</h3>
+    <p class="text-gray-400 text-sm">Aprenda Trigonometria Jogando</p>
   </div>
 </footer>
 
-<!-- JAVASCRIPT GAME LOGIC -->
+<!-- ==================== JAVASCRIPT ÚNICO E COMPLETO ==================== -->
 <script>
-// ===== GAME STATE =====
-let gameState = {
-  xp: 0,
-  level: 1,
-  streak: 3,
-  gems: 25,
-  lives: 3,
-  currentQuestion: 0,
-  correctAnswers: 0,
-  totalQuestions: 5,
-  unlockedLevels: [1, 2],
-  badges: ['primer-passa', 'ratxa-3'],
-  mascotMood: 'happy'
-};
+// ESTADO DO JOGO
+var game = {xp:0, nivel:1, streak:3, gemas:25, vidas:3, pergunta:0, acertos:0};
 
-// ===== QUESTIONS DATABASE =====
-const questions = [
-  {
-    question: "Quina es la formula del SENO?",
-    options: ["Cateto opuesto / Hipotenusa", "Cateto contiguo / Hipotenusa", "Opuesto / Contiguo", "Hipotenusa / Opuesto"],
-    correct: 0,
-    hint: "Recorda: SOH → Sine = Opposite / Hypotenuse"
-  },
-  {
-    question: "Quin valor te cos 60°?",
-    options: ["0", "1/2", "√3/2", "√2/2"],
-    correct: 1,
-    hint: "A 60° el cos es la meitat de la hipotenusa"
-  },
-  {
-    question: "Si tan α = 1, quin angle es?",
-    options: ["30°", "45°", "60°", "90°"],
-    correct: 1,
-    hint: "tan 45° = 1 (triangle isosceles)"
-  },
-  {
-    question: "Quina relacio es SEMPRE certa?",
-    options: ["sin²α + cos²α = 2", "sin²α + cos²α = 1", "sin α + cos α = 1", "tan α = sin α · cos α"],
-    correct: 1,
-    hint: "Relacio fonamental de la trigonometria!"
-  },
-  {
-    question: "En un triangle rectangle, si un angle es 30°, l'altre agut es:",
-    options: ["30°", "45°", "60°", "90°"],
-    correct: 2,
-    hint: "Els dos angles aguts sumen 90°"
-  }
+// PERGUNTAS
+var perguntas = [
+  {q:"Qual é a fórmula do SENO?", op:["Cateto oposto / Hipotenusa","Cateto adjacente / Hipotenusa","Oposto / Adjacente","Hipotenusa / Oposto"], cor:0, dica:"SOH → Sine = Opposite / Hypotenuse"},
+  {q:"Qual o valor de cos 60°?", op:["0","1/2","√3/2","√2/2"], cor:1, dica:"A 60° o cosseno é a metade"},
+  {q:"Se tan α = 1, qual o ângulo?", op:["30°","45°","60°","90°"], cor:1, dica:"tan 45° = 1"},
+  {q:"Qual relação é SEMPRE verdadeira?", op:["sin²+cos²=2","sin²+cos²=1","sin+cos=1","tan=sin·cos"], cor:1, dica:"Relação fundamental!"},
+  {q:"Num triângulo retângulo, se um ângulo é 30°, o outro é:", op:["30°","45°","60°","90°"], cor:2, dica:"Soma dos agudos = 90°"}
 ];
 
-// ===== INITIALIZE =====
-document.addEventListener('DOMContentLoaded', function() {
-  updateUI();
-  typeMascotText("Hola! Soc en Triqui! 🎉 Estas llest per aprendre trig jugant?");
-});
+var respondeu = false;
 
-// ===== UI UPDATES =====
-function updateUI() {
-  document.getElementById('xpText').textContent = gameState.xp + ' XP';
-  document.getElementById('xpBar').style.width = (gameState.xp % 100) + '%';
-  document.getElementById('streakCount').textContent = gameState.streak;
-  document.getElementById('gemCount').textContent = gameState.gems;
-  document.getElementById('levelBadge').textContent = gameState.level;
-  document.getElementById('gameXP').textContent = gameState.xp + ' XP';
+// FUNÇÃO: Atualizar UI
+function atualizarUI() {
+  var barra = document.getElementById('barraXP');
+  var texto = document.getElementById('textoXP');
+  var streak = document.getElementById('contStreak');
+  var gemas = document.getElementById('contGemas');
+  var badge = document.getElementById('badgeNivel');
+  var xpQuiz = document.getElementById('xpQuiz');
+
+  if(barra) barra.style.width = (game.xp % 100) + '%';
+  if(texto) texto.textContent = game.xp + ' XP';
+  if(streak) streak.textContent = game.streak;
+  if(gemas) gemas.textContent = game.gemas;
+  if(badge) badge.textContent = game.nivel;
+  if(xpQuiz) xpQuiz.textContent = game.xp + ' XP';
 }
 
-// ===== QUIZ LOGIC =====
-let selectedOption = null;
-let answered = false;
+// FUNÇÃO: Carregar pergunta
+function carregarPergunta() {
+  var p = perguntas[game.pergunta];
+  document.getElementById('numPergunta').textContent = game.pergunta + 1;
+  document.getElementById('textoPergunta').textContent = p.q;
 
-function selectOption(btn, index) {
-  if (answered) return;
+  var container = document.getElementById('containerOpcoes');
+  container.innerHTML = '';
 
-  // Remove previous selection
-  document.querySelectorAll('.quiz-option').forEach(opt => opt.classList.remove('selected'));
-  btn.classList.add('selected');
-  selectedOption = index;
-
-  // Auto-check after selection
-  checkAnswer();
-}
-
-function checkAnswer() {
-  if (selectedOption === null || answered) return;
-  answered = true;
-
-  const q = questions[gameState.currentQuestion];
-  const options = document.querySelectorAll('.quiz-option');
-  const feedbackArea = document.getElementById('feedbackArea');
-  const correctFeedback = document.getElementById('correctFeedback');
-  const wrongFeedback = document.getElementById('wrongFeedback');
-  const nextBtn = document.getElementById('nextBtn');
-
-  feedbackArea.classList.remove('hidden');
-
-  if (selectedOption === q.correct) {
-    // CORRECT!
-    options[selectedOption].classList.add('correct');
-    correctFeedback.classList.remove('hidden');
-    wrongFeedback.classList.add('hidden');
-
-    // Update game state
-    gameState.xp += 20;
-    gameState.correctAnswers++;
-    gameState.gems += 2;
-
-    // Visual effects
-    createParticles(options[selectedOption]);
-    showFloatingEmoji('🎉', options[selectedOption]);
-    mascotHappy();
-
-    // Check level up
-    if (gameState.xp >= gameState.level * 100) {
-      levelUp();
-    }
-  } else {
-    // WRONG!
-    options[selectedOption].classList.add('wrong');
-    options[q.correct].classList.add('correct');
-    correctFeedback.classList.add('hidden');
-    wrongFeedback.classList.remove('hidden');
-    document.getElementById('correctAnswer').textContent = 'La resposta correcta es: ' + q.options[q.correct];
-
-    gameState.lives--;
-    updateLives();
-    mascotSad();
-
-    if (gameState.lives <= 0) {
-      gameOver();
-      return;
-    }
+  for(var i=0; i<p.op.length; i++) {
+    var btn = document.createElement('button');
+    btn.className = 'quiz-opt w-full text-left p-4 rounded-2xl font-semibold text-gray-700 flex items-center gap-3';
+    btn.innerHTML = '<span class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-sm font-bold text-gray-500">' + String.fromCharCode(65+i) + '</span><span>' + p.op[i] + '</span>';
+    btn.onclick = (function(idx){return function(){clicarOpcao(this, idx);};})(i);
+    container.appendChild(btn);
   }
 
-  nextBtn.classList.remove('hidden');
-  updateUI();
+  document.getElementById('areaFeedback').classList.add('hidden');
+  document.getElementById('feedbackCerto').classList.add('hidden');
+  document.getElementById('feedbackErrado').classList.add('hidden');
+  document.getElementById('btnProxima').classList.add('hidden');
+  respondeu = false;
 }
 
-function nextQuestion() {
-  gameState.currentQuestion++;
-  answered = false;
-  selectedOption = null;
+// FUNÇÃO: Clicar opção
+function clicarOpcao(btn, idx) {
+  if(respondeu) return;
+  respondeu = true;
 
-  if (gameState.currentQuestion >= questions.length) {
-    showResults();
+  var p = perguntas[game.pergunta];
+  var opcoes = document.querySelectorAll('#containerOpcoes .quiz-opt');
+
+  if(idx === p.cor) {
+    btn.classList.add('certa');
+    document.getElementById('feedbackCerto').classList.remove('hidden');
+    document.getElementById('feedbackErrado').classList.add('hidden');
+    game.xp += 20;
+    game.acertos++;
+    game.gemas += 2;
+    criarParticulas(btn);
+    mostrarEmoji('🎉', btn);
+  } else {
+    btn.classList.add('errada');
+    opcoes[p.cor].classList.add('certa');
+    document.getElementById('feedbackCerto').classList.add('hidden');
+    document.getElementById('feedbackErrado').classList.remove('hidden');
+    document.getElementById('textoRespostaCorreta').textContent = 'Resposta: ' + p.op[p.cor];
+    game.vidas--;
+    atualizarVidas();
+  }
+
+  document.getElementById('areaFeedback').classList.remove('hidden');
+  document.getElementById('btnProxima').classList.remove('hidden');
+  atualizarUI();
+}
+
+// FUNÇÃO: Atualizar vidas
+function atualizarVidas() {
+  var c = document.getElementById('containerVidas');
+  var html = '';
+  for(var i=0; i<game.vidas; i++) html += '<span class="text-xl">❤️</span>';
+  for(var i=game.vidas; i<3; i++) html += '<span class="text-xl text-gray-300">🖤</span>';
+  c.innerHTML = html;
+}
+
+// FUNÇÃO: Próxima pergunta
+function proximaPergunta() {
+  game.pergunta++;
+  if(game.pergunta >= perguntas.length) {
+    mostrarResultado();
     return;
   }
-
-  loadQuestion();
+  carregarPergunta();
 }
 
-function loadQuestion() {
-  const q = questions[gameState.currentQuestion];
-  document.getElementById('currentQ').textContent = gameState.currentQuestion + 1;
-  document.getElementById('questionText').textContent = q.question;
+// FUNÇÃO: Mostrar resultado
+function mostrarResultado() {
+  var pct = (game.acertos / perguntas.length) * 100;
+  var msg, emoji, cor;
+  if(pct === 100) {msg='PERFEITO!'; emoji='🏆'; cor='from-green-500 to-blue-500'; game.gemas+=10;}
+  else if(pct >= 60) {msg='Muito bem!'; emoji='⭐'; cor='from-blue-500 to-purple-500'; game.gemas+=5;}
+  else {msg='Não desista!'; emoji='💪'; cor='from-yellow-500 to-orange-500';}
 
-  const optionsContainer = document.getElementById('optionsContainer');
-  optionsContainer.innerHTML = '';
-
-  q.options.forEach((opt, i) => {
-    const btn = document.createElement('button');
-    btn.className = 'quiz-option w-full text-left p-4 rounded-2xl border-2 border-gray-200 bg-white hover:bg-gray-50 font-semibold text-gray-700 flex items-center gap-3';
-    btn.onclick = () => selectOption(btn, i);
-    btn.innerHTML = `
-      <span class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-sm font-bold text-gray-500">${String.fromCharCode(65 + i)}</span>
-      <span>${opt}</span>
-    `;
-    optionsContainer.appendChild(btn);
-  });
-
-  document.getElementById('feedbackArea').classList.add('hidden');
-  document.getElementById('nextBtn').classList.add('hidden');
+  document.getElementById('cardQuiz').innerHTML = 
+    '<div class="bg-gradient-to-br ' + cor + ' p-8 text-center text-white">' +
+    '<span class="text-6xl block mb-4">' + emoji + '</span>' +
+    '<h3 class="font-game text-3xl font-bold mb-2">' + msg + '</h3>' +
+    '<p class="text-white/80 mb-4">' + game.acertos + '/' + perguntas.length + ' corretas</p>' +
+    '<p class="text-white/80 mb-6">+' + (game.acertos*20) + ' XP</p>' +
+    '<button onclick="reiniciarQuiz()" class="px-6 py-3 bg-white text-gray-800 rounded-xl font-bold">Jogar Novamente 🔄</button>' +
+    '</div>';
+  criarConfete();
+  atualizarUI();
 }
 
-function updateLives() {
-  const container = document.getElementById('livesContainer');
-  container.innerHTML = '';
-  for (let i = 0; i < gameState.lives; i++) {
-    container.innerHTML += '<span class="text-xl">❤️</span>';
-  }
-  for (let i = gameState.lives; i < 3; i++) {
-    container.innerHTML += '<span class="text-xl text-gray-300">🖤</span>';
-  }
+// FUNÇÃO: Reiniciar quiz
+function reiniciarQuiz() {
+  game.pergunta = 0;
+  game.acertos = 0;
+  game.vidas = 3;
+
+  document.getElementById('cardQuiz').innerHTML = 
+    '<div class="bg-gradient-to-r from-green-500 to-blue-500 p-4 flex items-center justify-between">' +
+    '<div class="flex items-center gap-2"><span class="text-2xl">❤️</span><div class="flex gap-1" id="containerVidas"><span class="text-xl">❤️</span><span class="text-xl">❤️</span><span class="text-xl">❤️</span></div></div>' +
+    '<div class="flex items-center gap-2 bg-white/20 rounded-full px-3 py-1"><span class="text-sm font-bold text-white">Pergunta <span id="numPergunta">1</span>/5</span></div>' +
+    '<div class="flex items-center gap-1"><span class="text-lg">⚡</span><span id="xpQuiz" class="text-sm font-bold text-white">' + game.xp + ' XP</span></div></div>' +
+    '<div class="p-6 md:p-8">' +
+    '<div class="flex items-start gap-3 mb-6"><div class="w-12 h-12 bg-gradient-to-br from-green-500 to-blue-500 rounded-full flex items-center justify-center text-2xl flex-shrink-0 mascote">🔺</div><div class="bg-blue-50 rounded-2xl rounded-tl-none p-4 flex-1"><p class="text-gray-700 font-semibold text-lg" id="textoPergunta"></p></div></div>' +
+    '<div class="space-y-3" id="containerOpcoes"></div>' +
+    '<div id="areaFeedback" class="hidden mt-6"><div id="feedbackCerto" class="hidden bg-green-50 border-2 border-green-300 rounded-2xl p-4 flex items-center gap-3"><span class="text-3xl">🎉</span><div><p class="font-bold text-green-700 text-lg">Correto! +20 XP</p><p class="text-green-600 text-sm">Muito bem!</p></div></div><div id="feedbackErrado" class="hidden bg-red-50 border-2 border-red-300 rounded-2xl p-4 flex items-center gap-3"><span class="text-3xl">😅</span><div><p class="font-bold text-red-700 text-lg">Ops!</p><p class="text-red-600 text-sm" id="textoRespostaCorreta"></p></div></div></div>' +
+    '<div class="mt-6 flex justify-between items-center"><button id="btnDica2" class="flex items-center gap-2 px-4 py-2 bg-yellow-100 text-yellow-700 rounded-xl font-semibold text-sm">💡 Dica (-5 💎)</button><button id="btnProxima2" class="hidden px-6 py-3 bg-green-500 text-white rounded-xl font-bold">Próxima →</button></div></div>';
+
+  // Reconectar eventos
+  document.getElementById('btnDica2').onclick = usarDica;
+  document.getElementById('btnProxima2').onclick = proximaPergunta;
+
+  carregarPergunta();
+  atualizarVidas();
 }
 
-function useHint() {
-  if (gameState.gems >= 5) {
-    gameState.gems -= 5;
-    const q = questions[gameState.currentQuestion];
-    alert('💡 PISTA: ' + q.hint);
-    updateUI();
+// FUNÇÃO: Usar dica
+function usarDica() {
+  if(game.gemas >= 5) {
+    game.gemas -= 5;
+    alert('💡 DICA: ' + perguntas[game.pergunta].dica);
+    atualizarUI();
   } else {
-    alert('💎 No tens prou gemes! Necessites 5 gemes.');
+    alert('💎 Gemas insuficientes!');
   }
 }
 
-function showResults() {
-  const card = document.getElementById('gameCard');
-  const percentage = (gameState.correctAnswers / questions.length) * 100;
-  let message, emoji, color;
-
-  if (percentage === 100) {
-    message = 'PERFECTE! Ets un crack!';
-    emoji = '🏆';
-    color = 'from-game-primary to-game-blue';
-    gameState.gems += 10;
-  } else if (percentage >= 60) {
-    message = 'Molt be! Segueix practicant!';
-    emoji = '⭐';
-    color = 'from-game-blue to-game-secondary';
-    gameState.gems += 5;
-  } else {
-    message = 'No et rendeixis! Torna a intentar-ho!';
-    emoji = '💪';
-    color = 'from-game-accent to-orange-400';
-  }
-
-  card.innerHTML = `
-    <div class="bg-gradient-to-br ${color} p-8 text-center text-white">
-      <span class="text-6xl block mb-4">${emoji}</span>
-      <h3 class="font-game text-3xl font-bold mb-2">${message}</h3>
-      <p class="text-white/80 mb-4">${gameState.correctAnswers}/${questions.length} correctes</p>
-      <p class="text-white/80 mb-6">+${gameState.correctAnswers * 20} XP guanyats!</p>
-      <button onclick="resetGame()" class="px-6 py-3 bg-white text-gray-800 rounded-xl font-bold hover:shadow-lg transition-all">
-        Tornar a Jugar 🔄
-      </button>
-    </div>
-  `;
-
-  // Confetti effect
-  createConfetti();
-  updateUI();
-}
-
-function resetGame() {
-  gameState.currentQuestion = 0;
-  gameState.correctAnswers = 0;
-  gameState.lives = 3;
-  answered = false;
-  selectedOption = null;
-
-  document.getElementById('gameCard').innerHTML = `
-    <div class="bg-gradient-to-r from-game-primary to-game-blue p-4 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <span class="text-2xl">❤️</span>
-        <div class="flex gap-1" id="livesContainer">
-          <span class="text-xl">❤️</span><span class="text-xl">❤️</span><span class="text-xl">❤️</span>
-        </div>
-      </div>
-      <div class="flex items-center gap-2 bg-white/20 rounded-full px-3 py-1">
-        <span class="text-sm font-bold text-white">Pregunta <span id="currentQ">1</span>/5</span>
-      </div>
-      <div class="flex items-center gap-1">
-        <span class="text-lg">⚡</span>
-        <span id="gameXP" class="text-sm font-bold text-white">${gameState.xp} XP</span>
-      </div>
-    </div>
-    <div class="p-6 md:p-8">
-      <div class="flex items-start gap-3 mb-6">
-        <div class="w-12 h-12 bg-gradient-to-br from-game-primary to-game-blue rounded-full flex items-center justify-center text-2xl flex-shrink-0 mascot">🔺</div>
-        <div class="bg-blue-50 rounded-2xl rounded-tl-none p-4 flex-1">
-          <p class="text-gray-700 font-semibold" id="questionText"></p>
-        </div>
-      </div>
-      <div class="space-y-3" id="optionsContainer"></div>
-      <div id="feedbackArea" class="hidden mt-6">
-        <div id="correctFeedback" class="hidden bg-green-50 border-2 border-green-300 rounded-2xl p-4 flex items-center gap-3">
-          <span class="text-3xl">🎉</span>
-          <div><p class="font-bold text-green-700">Correcte! +20 XP</p><p class="text-green-600 text-sm">Molt be!</p></div>
-        </div>
-        <div id="wrongFeedback" class="hidden bg-red-50 border-2 border-red-300 rounded-2xl p-4 flex items-center gap-3">
-          <span class="text-3xl">😅</span>
-          <div><p class="font-bold text-red-700">Ups! No es correcte</p><p class="text-red-600 text-sm" id="correctAnswer"></p></div>
-        </div>
-      </div>
-      <div class="mt-6 flex justify-between items-center">
-        <button onclick="useHint()" class="flex items-center gap-2 px-4 py-2 bg-yellow-100 text-yellow-700 rounded-xl font-semibold text-sm hover:bg-yellow-200 transition-all">
-          <span>💡</span>Pista (-5 💎)
-        </button>
-        <button onclick="nextQuestion()" id="nextBtn" class="hidden px-6 py-3 bg-game-primary text-white rounded-xl font-bold hover:bg-green-600 transition-all flex items-center gap-2">
-          Següent <span>→</span>
-        </button>
-      </div>
-    </div>
-  `;
-
-  loadQuestion();
-  updateLives();
-}
-
-function gameOver() {
-  const card = document.getElementById('gameCard');
-  card.innerHTML = `
-    <div class="bg-gradient-to-br from-game-danger to-red-400 p-8 text-center text-white">
-      <span class="text-6xl block mb-4">😢</span>
-      <h3 class="font-game text-3xl font-bold mb-2">Game Over!</h3>
-      <p class="text-white/80 mb-4">Has perdut totes les vides</p>
-      <p class="text-white/80 mb-6">Puntuacio: ${gameState.xp} XP</p>
-      <button onclick="resetGame()" class="px-6 py-3 bg-white text-gray-800 rounded-xl font-bold hover:shadow-lg transition-all">
-        Tornar a Intentar 🔄
-      </button>
-    </div>
-  `;
-  mascotSad();
-}
-
-// ===== LEVEL SYSTEM =====
-function levelUp() {
-  gameState.level++;
-  const badge = document.getElementById('levelBadge');
-  badge.classList.add('level-up');
-  setTimeout(() => badge.classList.remove('level-up'), 1000);
-
-  showFloatingEmoji('⬆️', badge);
-  typeMascotText("🎉 PUJADA DE NIVELL! Ets un crack!");
-}
-
-// ===== MASCOT INTERACTIONS =====
-function mascotHappy() {
-  const mascot = document.getElementById('mainMascot') || document.getElementById('interactiveMascot');
-  if (mascot) {
-    mascot.classList.remove('sad');
-    mascot.classList.add('happy');
-    setTimeout(() => mascot.classList.remove('happy'), 500);
-  }
-  typeMascotText("🎉 Molt be! Segueix aixi!");
-}
-
-function mascotSad() {
-  const mascot = document.getElementById('mainMascot') || document.getElementById('interactiveMascot');
-  if (mascot) {
-    mascot.classList.remove('happy');
-    mascot.classList.add('sad');
-    setTimeout(() => mascot.classList.remove('sad'), 500);
-  }
-  typeMascotText("😅 No et preocupis! Torna a intentar-ho!");
-}
-
-function petMascot() {
-  const mascot = document.getElementById('mainMascot') || document.getElementById('interactiveMascot');
-  if (mascot) {
-    mascot.classList.add('happy');
-    setTimeout(() => mascot.classList.remove('happy'), 500);
-  }
-  createParticles(mascot);
-  showFloatingEmoji('❤️', mascot);
-  typeMascotText("😊 Mmmm! M'agrada molt!");
-}
-
-function feedMascot() {
-  typeMascotText("🍕 Mmmm! Pizza! Tinc mes energia ara!");
-  showFloatingEmoji('🍕', document.getElementById('interactiveMascot'));
-}
-
-function danceMascot() {
-  const mascot = document.getElementById('interactiveMascot');
-  mascot.style.animation = 'none';
-  mascot.offsetHeight; // trigger reflow
-  mascot.style.animation = 'mascotHappy 0.5s ease-out 3';
-  typeMascotText("💃 Mira'm ballar! La trig es divertida!");
-}
-
-function interactMascot() {
-  const phrases = [
-    "Hola! Vols aprendre trig amb mi? 📐",
-    "Recorda: SOH CAH TOA! 🎵",
-    "Els triangles son els meus amics! 🔺",
-    "Practica 5 minuts al dia! ⏰",
-    "Tu pots! Confio en tu! 💪"
-  ];
-  const random = phrases[Math.floor(Math.random() * phrases.length)];
-  typeMascotText(random);
-  petMascot();
-}
-
-function typeMascotText(text) {
-  const speech = document.getElementById('mascotSpeech');
-  if (speech) {
-    speech.textContent = text;
-    speech.classList.add('typing-text');
-    setTimeout(() => speech.classList.remove('typing-text'), 2000);
-  }
-  const dialog = document.getElementById('mascotDialog');
-  if (dialog) {
-    dialog.textContent = '"' + text + '"';
-  }
-}
-
-// ===== VISUAL EFFECTS =====
-function createParticles(element) {
-  const rect = element.getBoundingClientRect();
-  const colors = ['#58CC02', '#1CB0F6', '#CE82FF', '#FF9600', '#FF7EB5'];
-
-  for (let i = 0; i < 8; i++) {
-    const particle = document.createElement('div');
-    particle.className = 'particle';
-    particle.style.cssText = `
-      position: fixed;
-      left: ${rect.left + rect.width/2}px;
-      top: ${rect.top + rect.height/2}px;
-      width: 12px;
-      height: 12px;
-      background: ${colors[Math.floor(Math.random() * colors.length)]};
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 9999;
-      --tx: ${(Math.random() - 0.5) * 150}px;
-      --ty: ${(Math.random() - 0.5) * 150}px;
-    `;
-    particle.style.animation = 'particleFloat 1s ease-out forwards';
-    document.body.appendChild(particle);
-    setTimeout(() => particle.remove(), 1000);
-  }
-}
-
-function showFloatingEmoji(emoji, element) {
-  const rect = element.getBoundingClientRect();
-  const float = document.createElement('div');
-  float.className = 'float-emoji';
-  float.textContent = emoji;
-  float.style.cssText = `
-    position: fixed;
-    left: ${rect.left + rect.width/2}px;
-    top: ${rect.top}px;
-    font-size: 2rem;
-    z-index: 9999;
-    pointer-events: none;
-  `;
-  document.body.appendChild(float);
-  setTimeout(() => float.remove(), 2000);
-}
-
-function createConfetti() {
-  const colors = ['#58CC02', '#1CB0F6', '#CE82FF', '#FF9600', '#FF4B4B', '#FF7EB5'];
-  for (let i = 0; i < 50; i++) {
-    const confetti = document.createElement('div');
-    confetti.className = 'confetti-piece';
-    confetti.style.cssText = `
-      position: fixed;
-      left: ${Math.random() * 100}vw;
-      top: -10px;
-      width: ${Math.random() * 10 + 5}px;
-      height: ${Math.random() * 10 + 5}px;
-      background: ${colors[Math.floor(Math.random() * colors.length)];
-      border-radius: ${Math.random() > 0.5 ? '50%' : '0'};
-      z-index: 9999;
-      animation-delay: ${Math.random() * 2}s;
-    `;
-    document.body.appendChild(confetti);
-    setTimeout(() => confetti.remove(), 3000);
-  }
-}
-
-// ===== FLASHCARDS =====
-function flipCard(card) {
+// FUNÇÃO: Virar cartão
+function virarCartao(id) {
+  var card = document.getElementById(id);
   card.classList.toggle('flipped');
-  if (card.classList.contains('flipped')) {
-    gameState.xp += 5;
-    updateUI();
+  if(card.classList.contains('flipped')) {
+    game.xp += 5;
+    atualizarUI();
   }
 }
 
-// ===== LEVEL MAP =====
-function openLevel(level) {
-  if (gameState.unlockedLevels.includes(level)) {
-    alert('🎮 Nivell ' + level + ' obert! Començant...');
-    document.getElementById('joc').scrollIntoView({ behavior: 'smooth' });
-    resetGame();
-  } else {
-    alert('🔒 Nivell bloquejat! Completa el nivell anterior primer.');
+// FUNÇÃO: Criar partículas
+function criarParticulas(el) {
+  var rect = el.getBoundingClientRect();
+  var cores = ['#58CC02','#1CB0F6','#CE82FF','#FFC800','#FF7EB5'];
+  for(var i=0; i<8; i++) {
+    var p = document.createElement('div');
+    p.className = 'particle';
+    p.style.cssText = 'left:'+(rect.left+rect.width/2)+'px;top:'+(rect.top+rect.height/2)+'px;width:12px;height:12px;background:'+cores[Math.floor(Math.random()*cores.length)];
+    p.style.setProperty('--tx', ((Math.random()-0.5)*150)+'px');
+    p.style.setProperty('--ty', ((Math.random()-0.5)*150)+'px');
+    document.body.appendChild(p);
+    setTimeout(function(x){return function(){x.remove();};}(p), 1000);
   }
 }
 
-// ===== MINI GAMES =====
-function startMiniGame(game) {
-  const games = {
-    memory: "🧠 Joc de Memoria: Aparellar valors notables!",
-    speed: "⚡ Mode Velocitat: 30 segons, tants exercicis com puguis!",
-    match: "🎯 Parelles: Uneix formules amb els seus noms!"
+// FUNÇÃO: Mostrar emoji flutuante
+function mostrarEmoji(emoji, el) {
+  var rect = el.getBoundingClientRect();
+  var div = document.createElement('div');
+  div.className = 'float-emoji';
+  div.textContent = emoji;
+  div.style.left = (rect.left + rect.width/2) + 'px';
+  div.style.top = rect.top + 'px';
+  document.body.appendChild(div);
+  setTimeout(function(){div.remove();}, 1500);
+}
+
+// FUNÇÃO: Criar confete
+function criarConfete() {
+  var cores = ['#58CC02','#1CB0F6','#CE82FF','#FFC800','#FF4B4B','#FF7EB5'];
+  for(var i=0; i<50; i++) {
+    var c = document.createElement('div');
+    c.className = 'confete';
+    c.style.left = (Math.random()*100) + 'vw';
+    c.style.top = '-10px';
+    c.style.width = (Math.random()*10+5) + 'px';
+    c.style.height = (Math.random()*10+5) + 'px';
+    c.style.background = cores[Math.floor(Math.random()*cores.length)];
+    c.style.borderRadius = Math.random()>0.5 ? '50%' : '0';
+    c.style.animationDelay = (Math.random()*2) + 's';
+    document.body.appendChild(c);
+    setTimeout(function(x){return function(){x.remove();};}(c), 3000);
+  }
+}
+
+// FUNÇÃO: Falar mascote
+function falarMascote(texto) {
+  var fala = document.getElementById('falaMascote');
+  var dialogo = document.getElementById('dialogoMascote');
+  if(fala) fala.textContent = texto;
+  if(dialogo) dialogo.textContent = '"' + texto + '"';
+}
+
+// EVENT LISTENERS (usando addEventListener em vez de onclick inline)
+document.addEventListener('DOMContentLoaded', function() {
+  atualizarUI();
+  carregarPergunta();
+
+  // Botões do quiz
+  document.getElementById('btnProxima').onclick = proximaPergunta;
+  document.getElementById('btnDica').onclick = usarDica;
+
+  // Botões do hero
+  document.getElementById('btnComecar').onclick = function() {
+    document.getElementById('secaoQuiz').scrollIntoView({behavior:'smooth'});
+    reiniciarQuiz();
   };
-  alert(games[game] + "
+  document.getElementById('btnContinuar').onclick = function() {
+    alert('Nível: ' + game.nivel + ' | XP: ' + game.xp);
+  };
 
-(En desenvolupament - torna aviat!)");
-}
+  // Mascote
+  document.getElementById('mascotePrincipal').onclick = function() {
+    falarMascote("Oi! Vamos aprender trig! 📐");
+    criarParticulas(this);
+  };
+  document.getElementById('mascoteInterativo').onclick = function() {
+    var frases = ["Oi! Quer aprender?","SOH CAH TOA!","Os triângulos são legais!","Pratique 5 minutos!","Você consegue!"];
+    falarMascote(frases[Math.floor(Math.random()*frases.length)]);
+    criarParticulas(this);
+    mostrarEmoji('❤️', this);
+    game.xp += 2;
+    atualizarUI();
+  };
 
-// ===== START GAME =====
-function startGame() {
-  document.getElementById('joc').scrollIntoView({ behavior: 'smooth' });
-  resetGame();
-  typeMascotText("🎮 Comencem! Llegeix be les preguntes!");
-}
+  // Botões do mascote
+  document.getElementById('btnComida').onclick = function() {
+    falarMascote("🍕 Hmmm! Pizza!");
+    mostrarEmoji('🍕', document.getElementById('mascoteInterativo'));
+  };
+  document.getElementById('btnCarinho').onclick = function() {
+    falarMascote("😊 Awn! Adoro carinho!");
+    criarParticulas(document.getElementById('mascoteInterativo'));
+    game.xp += 2;
+    atualizarUI();
+  };
+  document.getElementById('btnDanca').onclick = function() {
+    falarMascote("💃 Olha eu dançando!");
+  };
 
-function showContinue() {
-  alert('⏳ Continuaras des de l'ultim nivell completat!
+  // Flashcards
+  for(var i=1; i<=6; i++) {
+    document.getElementById('card'+i).onclick = (function(id){return function(){virarCartao(id);};})('card'+i);
+  }
 
-Nivell actual: ' + gameState.level + '
-XP: ' + gameState.xp);
-}
-
-// ===== CHECKLIST =====
-function updateChecklist(checkbox) {
-  const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-  const checked = Array.from(checkboxes).filter(cb => cb.checked).length;
-  const progress = document.getElementById('checklist-progress');
-  if (progress) progress.textContent = checked;
-}
+  // Níveis
+  document.getElementById('nivel1').onclick = function() {
+    document.getElementById('secaoQuiz').scrollIntoView({behavior:'smooth'});
+    reiniciarQuiz();
+  };
+  document.getElementById('nivel2').onclick = function() {
+    document.getElementById('secaoQuiz').scrollIntoView({behavior:'smooth'});
+    reiniciarQuiz();
+  };
+  document.getElementById('nivel3').onclick = function() {alert('🔒 Bloqueado!');};
+  document.getElementById('nivel4').onclick = function() {alert('🔒 Bloqueado!');};
+});
 </script>
 </body>
 </html>
